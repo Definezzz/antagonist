@@ -83,10 +83,18 @@ module.exports = async (req, res) => {
     }
     const name = body.name;
     const payload = body.payload;
-    // Match Gamesense script: alphanumeric only (\fLua %w), no spaces/symbols
-    if (!name || typeof name !== "string" || !/^[a-zA-Z0-9]+$/.test(name)) {
+    if (
+      !name ||
+      typeof name !== "string" ||
+      name.length > 120 ||
+      !/^[a-zA-Z0-9 _\-]+$/.test(name)
+    ) {
       res.statusCode = 400;
-      return res.end(JSON.stringify({ error: "name must be letters/digits only" }));
+      return res.end(
+        JSON.stringify({
+          error: "name must be 1–120 chars: letters, digits, spaces, hyphen only",
+        })
+      );
     }
     if (typeof payload !== "string" || payload.length === 0) {
       res.statusCode = 400;
