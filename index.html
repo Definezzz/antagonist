@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Antagonist cloud configs</title>
+  <style>
+    :root {
+      --bg: #0d0f12;
+      --panel: #151922;
+      --border: #2a3142;
+      --text: #e6e9ef;
+      --muted: #8b93a7;
+      --accent: #6ab0ff;
+      --danger: #ff6b6b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+    }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
+    h1 { font-size: 1.35rem; font-weight: 600; margin: 0 0 0.35rem; }
+    p.sub { color: var(--muted); margin: 0 0 1.5rem; font-size: 0.95rem; }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 1rem;
+    }
+    label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 0.35rem; }
+    input[type="text"], textarea {
+      width: 100%;
+      background: #0b0d10;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      padding: 0.55rem 0.65rem;
+      font-size: 0.9rem;
+      font-family: ui-monospace, Consolas, monospace;
+    }
+    textarea { min-height: 120px; resize: vertical; }
+    .row { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; margin-top: 0.75rem; }
+    button {
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: #1c2230;
+      color: var(--text);
+      padding: 0.5rem 0.9rem;
+      border-radius: 6px;
+      font-size: 0.88rem;
+    }
+    button.primary { border-color: #3d5a80; background: #243447; color: #dbeafe; }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+    ul { list-style: none; margin: 0.5rem 0 0; padding: 0; }
+    li {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 0.5rem; padding: 0.45rem 0; border-bottom: 1px solid #222733;
+      font-family: ui-monospace, Consolas, monospace; font-size: 0.85rem;
+    }
+    li:last-child { border-bottom: none; }
+    .msg { margin-top: 0.75rem; font-size: 0.85rem; }
+    .msg.ok { color: #7dd3a0; }
+    .msg.err { color: var(--danger); }
+    code { background: #0b0d10; padding: 0.1rem 0.35rem; border-radius: 4px; font-size: 0.82em; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Antagonist cloud configs</h1>
+    <p class="sub">
+      API at <code>/api/configs</code>. In the script, set <strong>API base</strong> to
+      <code id="baseExample"></code> (no trailing slash).
+    </p>
+
+    <div class="card">
+      <strong>List</strong>
+      <div class="row">
+        <button type="button" class="primary" id="btnRefresh">Refresh list</button>
+      </div>
+      <ul id="list"></ul>
+      <div class="msg" id="listMsg"></div>
+    </div>
+
+    <div class="card">
+      <strong>Download</strong>
+      <label for="dlName">Profile name</label>
+      <input type="text" id="dlName" placeholder="myconfig" autocomplete="off" />
+      <div class="row">
+        <button type="button" class="primary" id="btnDownload">Download JSON (payload)</button>
+      </div>
+      <div class="msg" id="dlMsg"></div>
+    </div>
+
+    <div class="card">
+      <strong>Upload</strong>
+      <label for="upName">Profile name (letters and digits only — must match script)</label>
+      <input type="text" id="upName" placeholder="myconfig" autocomplete="off" />
+      <label for="upPayload" style="margin-top:0.75rem">Base64 payload (from script export)</label>
+      <textarea id="upPayload" placeholder="Paste export blob…"></textarea>
+      <div class="row">
+        <button type="button" class="primary" id="btnUpload">Upload</button>
+      </div>
+      <div class="msg" id="upMsg"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var apiBase = "";
+
+      function el(id) { return document.getElementById(id); }
+
+      el("baseExample").textContent =
+        (typeof location !== "undefined" ? location.origin : "") + "/api/configs";
+
+      function setMsg(node, text, ok) {
+        node.textContent = text || "";
+        node.className = "msg " + (ok ? "ok" : text ? "err" : "");
+      }
+
+      el("btnRefresh").onclick = function () {
+        var msg = el("listMsg");
+        setMsg(msg, "Loading…", true);
+        el("list").innerHTML = "";
+        fetch(apiBase + "/api/configs")
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            var ul = el("list");
+            ul.innerHTML = "";
+            var items = (data && data.items) || [];
+            items.forEach(function (it) {
+              var n = it.name || it.key || "";
+              if (!n) return;
+              var li = document.createElement("li");
+              li.textContent = n;
+              ul.appendChild(li);
+            });
+            setMsg(msg, "Found " + items.length + " profile(s).", true);
+          })
+          .catch(function (e) {
+            setMsg(msg, String(e));
+          });
+      };
+
+      el("btnDownload").onclick = function () {
+        var name = (el("dlName").value || "").trim();
+        var msg = el("dlMsg");
+        if (!name) {
+          setMsg(msg, "Enter a name.");
+          return;
+        }
+        setMsg(msg, "Downloading…", true);
+        fetch(apiBase + "/api/configs?name=" + encodeURIComponent(name))
+          .then(function (r) {
+            if (!r.ok) throw new Error("HTTP " + r.status);
+            return r.json();
+          })
+          .then(function (data) {
+            if (!data || !data.payload) throw new Error("No payload in response");
+            var blob = JSON.stringify(data, null, 2);
+            var a = document.createElement("a");
+            a.href = URL.createObjectURL(new Blob([blob], { type: "application/json" }));
+            a.download = name + ".json";
+            a.click();
+            URL.revokeObjectURL(a.href);
+            setMsg(msg, "Saved " + name + ".json", true);
+          })
+          .catch(function (e) {
+            setMsg(msg, String(e));
+          });
+      };
+
+      el("btnUpload").onclick = function () {
+        var name = (el("upName").value || "").trim();
+        var payload = (el("upPayload").value || "").trim();
+        var msg = el("upMsg");
+        if (!name || !payload) {
+          setMsg(msg, "Name and payload required.");
+          return;
+        }
+        setMsg(msg, "Uploading…", true);
+        fetch(apiBase + "/api/configs", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: name, payload: payload }),
+        })
+          .then(function (r) {
+            if (!r.ok) return r.json().then(function (j) { throw new Error(j.error || "HTTP " + r.status); });
+            return r.json();
+          })
+          .then(function () {
+            setMsg(msg, "Uploaded " + name + ".", true);
+            el("btnRefresh").click();
+          })
+          .catch(function (e) {
+            setMsg(msg, String(e));
+          });
+      };
+    })();
+  </script>
+</body>
+</html>
