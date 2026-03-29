@@ -3,143 +3,340 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Antagonist cloud configs</title>
+  <title>Antagonist Cloud</title>
   <style>
     :root {
-      --bg: #0d0f12;
-      --panel: #151922;
-      --border: #2a3142;
-      --text: #e6e9ef;
-      --muted: #8b93a7;
-      --accent: #6ab0ff;
-      --danger: #ff6b6b;
+      --bg: #06080c;
+      --bg-soft: #0b111b;
+      --panel: rgba(18, 24, 37, 0.68);
+      --panel-strong: rgba(15, 21, 34, 0.92);
+      --border: rgba(129, 154, 200, 0.24);
+      --text: #eef3ff;
+      --muted: #94a2bc;
+      --accent: #8eb6ff;
+      --accent-2: #7ef7d5;
+      --success: #73e2a7;
+      --danger: #ff7b9a;
+      --shadow: 0 18px 55px rgba(0, 0, 0, 0.45);
+      --radius: 16px;
     }
     * { box-sizing: border-box; }
-    body {
+    html, body {
       margin: 0;
-      min-height: 100vh;
-      font-family: system-ui, Segoe UI, Roboto, sans-serif;
-      background: var(--bg);
+      min-height: 100%;
+      background:
+        radial-gradient(1200px 650px at 6% -10%, rgba(122, 174, 255, 0.20), transparent 52%),
+        radial-gradient(900px 520px at 95% 5%, rgba(126, 247, 213, 0.13), transparent 56%),
+        linear-gradient(180deg, #070a10 0%, #05070b 100%);
       color: var(--text);
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
       line-height: 1.45;
     }
-    .wrap { max-width: 720px; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
-    h1 { font-size: 1.35rem; font-weight: 600; margin: 0 0 0.35rem; }
-    p.sub { color: var(--muted); margin: 0 0 1.5rem; font-size: 0.95rem; }
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1rem 1.1rem;
-      margin-bottom: 1rem;
+    .grain::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.04;
+      background-image: radial-gradient(#ffffff 0.7px, transparent 0.7px);
+      background-size: 3px 3px;
+      z-index: 0;
     }
-    label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 0.35rem; }
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 18px 42px;
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 30px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 650;
+      letter-spacing: 0.01em;
+    }
+    .brand-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 18px rgba(142, 182, 255, 0.75);
+    }
+    .pill {
+      border: 1px solid var(--border);
+      background: rgba(17, 22, 34, 0.6);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .hero {
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(18, 24, 38, 0.90) 0%, rgba(11, 15, 24, 0.86) 100%);
+      box-shadow: var(--shadow);
+      padding: 30px 24px;
+      margin-bottom: 18px;
+      overflow: hidden;
+      position: relative;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -120px;
+      top: -120px;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(142, 182, 255, 0.2), transparent 70%);
+      pointer-events: none;
+    }
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(30px, 4vw, 45px);
+      line-height: 1.06;
+      letter-spacing: -0.02em;
+    }
+    .hero p {
+      margin: 0;
+      max-width: 800px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+    .hero .api-chip {
+      display: inline-block;
+      margin-top: 14px;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(9, 13, 20, 0.76);
+      color: #c7d6f7;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .stat {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(8, 12, 19, 0.72);
+      padding: 13px;
+    }
+    .stat .k { color: #d9e7ff; font-size: 20px; font-weight: 700; }
+    .stat .v { color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--panel);
+      backdrop-filter: blur(8px);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      min-height: 150px;
+    }
+    .card h2 { margin: 0 0 10px; font-size: 16px; font-weight: 620; letter-spacing: 0.01em; }
+    .card p.hint { margin: 0 0 10px; color: var(--muted); font-size: 12px; }
+    .col-4 { grid-column: span 4; }
+    .col-12 { grid-column: span 12; }
+    label { display: block; margin: 10px 0 6px; color: #b7c5df; font-size: 12px; }
     input[type="text"], textarea {
       width: 100%;
-      background: #0b0d10;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      color: var(--text);
-      padding: 0.55rem 0.65rem;
-      font-size: 0.9rem;
-      font-family: ui-monospace, Consolas, monospace;
+      border: 1px solid rgba(129, 154, 200, 0.33);
+      border-radius: 10px;
+      background: rgba(6, 10, 16, 0.84);
+      color: #eaf0ff;
+      padding: 10px 11px;
+      font-size: 13px;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
-    textarea { min-height: 120px; resize: vertical; }
-    .row { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; margin-top: 0.75rem; }
+    input[type="text"]:focus, textarea:focus {
+      border-color: rgba(142, 182, 255, 0.72);
+      box-shadow: 0 0 0 3px rgba(142, 182, 255, 0.16);
+    }
+    textarea { min-height: 130px; resize: vertical; }
+    .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 11px; }
     button {
+      border: 1px solid rgba(129, 154, 200, 0.36);
+      background: linear-gradient(180deg, rgba(35, 47, 72, 0.96) 0%, rgba(24, 34, 52, 0.95) 100%);
+      color: #e9f0ff;
+      border-radius: 10px;
+      padding: 9px 13px;
+      font-size: 13px;
       cursor: pointer;
-      border: 1px solid var(--border);
-      background: #1c2230;
-      color: var(--text);
-      padding: 0.5rem 0.9rem;
-      border-radius: 6px;
-      font-size: 0.88rem;
+      transition: transform 0.05s ease, border-color 0.15s ease, filter 0.15s ease;
     }
-    button.primary { border-color: #3d5a80; background: #243447; color: #dbeafe; }
-    button:disabled { opacity: 0.45; cursor: not-allowed; }
-    ul { list-style: none; margin: 0.5rem 0 0; padding: 0; }
+    button:hover { border-color: rgba(142, 182, 255, 0.70); }
+    button:active { transform: translateY(1px); }
+    button:disabled { cursor: not-allowed; opacity: 0.54; }
+    button.primary {
+      border-color: rgba(142, 182, 255, 0.75);
+      background: linear-gradient(180deg, rgba(84, 119, 193, 0.95), rgba(50, 79, 141, 0.96));
+      box-shadow: 0 6px 22px rgba(79, 120, 207, 0.33);
+    }
+    ul { margin: 10px 0 0; padding: 0; list-style: none; }
     li {
-      display: flex; justify-content: space-between; align-items: center;
-      gap: 0.5rem; padding: 0.45rem 0; border-bottom: 1px solid #222733;
-      font-family: ui-monospace, Consolas, monospace; font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 7px;
+      border: 1px solid rgba(129, 154, 200, 0.19);
+      border-radius: 10px;
+      margin-bottom: 6px;
+      padding: 8px 10px;
+      background: rgba(7, 10, 16, 0.62);
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 12px;
+      color: #d5e1f8;
+      word-break: break-all;
     }
-    li:last-child { border-bottom: none; }
-    .msg { margin-top: 0.75rem; font-size: 0.85rem; }
-    .msg.ok { color: #7dd3a0; }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      padding: 3px 6px;
+      border-radius: 7px;
+      border: 1px solid rgba(129, 154, 200, 0.23);
+      background: rgba(6, 10, 16, 0.74);
+      font-size: 12px;
+      color: #d6e2ff;
+    }
+    .msg { margin-top: 10px; min-height: 19px; font-size: 12px; color: var(--muted); }
+    .msg.ok { color: var(--success); }
     .msg.err { color: var(--danger); }
-    code { background: #0b0d10; padding: 0.1rem 0.35rem; border-radius: 4px; font-size: 0.82em; }
+    .footer {
+      margin-top: 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--panel-strong);
+      padding: 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    @media (max-width: 920px) {
+      .col-4 { grid-column: span 12; }
+      .stats { grid-template-columns: 1fr; }
+      .hero { padding: 24px 16px; }
+    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>Antagonist cloud configs</h1>
-    <p class="sub">
-      API at <code>/api/configs</code>. In the script, set <strong>API base</strong> to
-      <code id="baseExample"></code> (no trailing slash).
-    </p>
-
-    <div class="card">
-      <strong>List</strong>
-      <div class="row">
-        <button type="button" class="primary" id="btnRefresh">Refresh list</button>
+  <div class="grain"></div>
+  <main class="container">
+    <header class="nav">
+      <div class="brand">
+        <span class="brand-dot"></span>
+        <span>Antagonist Cloud</span>
       </div>
-      <ul id="list"></ul>
-      <div class="msg" id="listMsg"></div>
-    </div>
+      <div class="pill">Axis-inspired UI</div>
+    </header>
 
-    <div class="card">
-      <strong>Download</strong>
-      <label for="dlName">Profile name</label>
-      <input type="text" id="dlName" placeholder="myconfig" autocomplete="off" />
-      <div class="row">
-        <button type="button" class="primary" id="btnDownload">Download JSON (payload)</button>
+    <section class="hero">
+      <h1>Cloud Config Manager</h1>
+      <p>Premium dark panel style with the same API workflow: list profiles, download payload, and upload exports directly to your cloud backend.</p>
+      <div class="api-chip">API: <code id="baseExample"></code></div>
+      <div class="stats">
+        <div class="stat"><div class="k" id="statProfiles">-</div><div class="v">Stored profiles</div></div>
+        <div class="stat"><div class="k">POST / GET</div><div class="v">Supported methods</div></div>
+        <div class="stat"><div class="k">Persisted</div><div class="v">Redis-backed storage</div></div>
       </div>
-      <div class="msg" id="dlMsg"></div>
-    </div>
+    </section>
 
-    <div class="card">
-      <strong>Upload</strong>
-      <label for="upName">Profile name (letters and digits only — must match script)</label>
-      <input type="text" id="upName" placeholder="myconfig" autocomplete="off" />
-      <label for="upPayload" style="margin-top:0.75rem">Base64 payload (from script export)</label>
-      <textarea id="upPayload" placeholder="Paste export blob…"></textarea>
-      <div class="row">
-        <button type="button" class="primary" id="btnUpload">Upload</button>
+    <section class="grid">
+      <article class="card col-4">
+        <h2>Profiles</h2>
+        <p class="hint">View all cloud profile keys currently saved.</p>
+        <div class="row">
+          <button type="button" class="primary" id="btnRefresh">Refresh list</button>
+        </div>
+        <ul id="list"></ul>
+        <div class="msg" id="listMsg"></div>
+      </article>
+
+      <article class="card col-4">
+        <h2>Download</h2>
+        <p class="hint">Fetch one profile and save it as a JSON file.</p>
+        <label for="dlName">Profile name</label>
+        <input type="text" id="dlName" placeholder="myconfig - steamname" autocomplete="off" />
+        <div class="row">
+          <button type="button" class="primary" id="btnDownload">Download payload</button>
+        </div>
+        <div class="msg" id="dlMsg"></div>
+      </article>
+
+      <article class="card col-4">
+        <h2>Upload</h2>
+        <p class="hint">Push a new base64 payload for a profile key.</p>
+        <label for="upName">Profile name</label>
+        <input type="text" id="upName" placeholder="myconfig - steamname" autocomplete="off" />
+        <label for="upPayload">Base64 payload</label>
+        <textarea id="upPayload" placeholder="Paste export blob from the script..."></textarea>
+        <div class="row">
+          <button type="button" class="primary" id="btnUpload">Upload</button>
+        </div>
+        <div class="msg" id="upMsg"></div>
+      </article>
+
+      <div class="col-12 footer">
+        In your Lua script, use the API base exactly as <code id="baseExample2"></code> (no trailing slash).
       </div>
-      <div class="msg" id="upMsg"></div>
-    </div>
-  </div>
+    </section>
+  </main>
+
   <script>
     (function () {
       var apiBase = "";
-
       function el(id) { return document.getElementById(id); }
 
-      el("baseExample").textContent =
-        (typeof location !== "undefined" ? location.origin : "") + "/api/configs";
+      var baseUrl = (typeof location !== "undefined" ? location.origin : "") + "/api/configs";
+      el("baseExample").textContent = baseUrl;
+      el("baseExample2").textContent = baseUrl;
 
       function setMsg(node, text, ok) {
         node.textContent = text || "";
         node.className = "msg " + (ok ? "ok" : text ? "err" : "");
       }
 
+      function renderList(items) {
+        var ul = el("list");
+        ul.innerHTML = "";
+        items.forEach(function (it) {
+          var n = it.name || it.key || "";
+          if (!n) return;
+          var li = document.createElement("li");
+          li.textContent = n;
+          ul.appendChild(li);
+        });
+        el("statProfiles").textContent = String(items.length);
+      }
+
       el("btnRefresh").onclick = function () {
         var msg = el("listMsg");
-        setMsg(msg, "Loading…", true);
-        el("list").innerHTML = "";
+        setMsg(msg, "Loading...", true);
         fetch(apiBase + "/api/configs")
-          .then(function (r) { return r.json(); })
+          .then(function (r) {
+            if (!r.ok) throw new Error("HTTP " + r.status);
+            return r.json();
+          })
           .then(function (data) {
-            var ul = el("list");
-            ul.innerHTML = "";
             var items = (data && data.items) || [];
-            items.forEach(function (it) {
-              var n = it.name || it.key || "";
-              if (!n) return;
-              var li = document.createElement("li");
-              li.textContent = n;
-              ul.appendChild(li);
-            });
+            renderList(items);
             setMsg(msg, "Found " + items.length + " profile(s).", true);
           })
           .catch(function (e) {
@@ -151,10 +348,10 @@
         var name = (el("dlName").value || "").trim();
         var msg = el("dlMsg");
         if (!name) {
-          setMsg(msg, "Enter a name.");
+          setMsg(msg, "Enter a profile name.");
           return;
         }
-        setMsg(msg, "Downloading…", true);
+        setMsg(msg, "Downloading...", true);
         fetch(apiBase + "/api/configs?name=" + encodeURIComponent(name))
           .then(function (r) {
             if (!r.ok) throw new Error("HTTP " + r.status);
@@ -180,17 +377,21 @@
         var payload = (el("upPayload").value || "").trim();
         var msg = el("upMsg");
         if (!name || !payload) {
-          setMsg(msg, "Name and payload required.");
+          setMsg(msg, "Name and payload are required.");
           return;
         }
-        setMsg(msg, "Uploading…", true);
+        setMsg(msg, "Uploading...", true);
         fetch(apiBase + "/api/configs", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: name, payload: payload }),
+          body: JSON.stringify({ name: name, payload: payload })
         })
           .then(function (r) {
-            if (!r.ok) return r.json().then(function (j) { throw new Error(j.error || "HTTP " + r.status); });
+            if (!r.ok) {
+              return r.json().then(function (j) {
+                throw new Error((j && j.error) || ("HTTP " + r.status));
+              });
+            }
             return r.json();
           })
           .then(function () {
@@ -201,6 +402,8 @@
             setMsg(msg, String(e));
           });
       };
+
+      el("btnRefresh").click();
     })();
   </script>
 </body>
