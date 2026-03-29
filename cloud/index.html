@@ -36,6 +36,33 @@
     a { color: inherit; text-decoration: none; }
     ::selection { background: rgba(165, 207, 170, 0.28); }
 
+    /* Custom cursor */
+    :root {
+      --cursor-dot: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A//www.w3.org/2000/svg'%20width%3D'24'%20height%3D'24'%20viewBox%3D'0%200%2024%2024'%3E%3Ccircle%20cx%3D'12'%20cy%3D'12'%20r%3D'4'%20fill%3D'%23a5cfaa'/%3E%3Ccircle%20cx%3D'12'%20cy%3D'12'%20r%3D'9'%20fill%3D'none'%20stroke%3D'rgba(165%2C207%2C170%2C0.45)'%20stroke-width%3D'2'/%3E%3C/svg%3E");
+      --cursor-pointer: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A//www.w3.org/2000/svg'%20width%3D'32'%20height%3D'32'%20viewBox%3D'0%200%2032%2032'%3E%3Ccircle%20cx%3D'16'%20cy%3D'16'%20r%3D'5'%20fill%3D'%23a5cfaa'/%3E%3Ccircle%20cx%3D'16'%20cy%3D'16'%20r%3D'12'%20fill%3D'none'%20stroke%3D'rgba(165%2C207%2C170%2C0.55)'%20stroke-width%3D'2'/%3E%3Cpath%20d%3D'M21%2016h6'%20stroke%3D'rgba(165%2C207%2C170%2C0.55)'%20stroke-width%3D'2'%20stroke-linecap%3D'round'/%3E%3C/svg%3E");
+    }
+    body { cursor: var(--cursor-dot) 12 12, auto; }
+    a, button, .btn, li { cursor: var(--cursor-pointer) 16 16, pointer; }
+
+    /* Smooth reveal animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); filter: blur(2px); }
+      to { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+    .reveal {
+      opacity: 0;
+      animation: fadeUp 0.70s cubic-bezier(.2,.8,.2,1) both;
+      will-change: transform, opacity, filter;
+    }
+    .d1 { animation-delay: 0.05s; }
+    .d2 { animation-delay: 0.12s; }
+    .d3 { animation-delay: 0.19s; }
+    .d4 { animation-delay: 0.26s; }
+    .d5 { animation-delay: 0.33s; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; animation: none; }
+    }
+
     #webgl {
       width: 100%;
       height: 100svh;
@@ -318,9 +345,9 @@
     </header>
 
     <section class="hero">
-      <h1>Cloud Config Manager</h1>
-      <p>On this site u can view all the cloud configs available for antagonist lua script.</p>
-      <div class="stats">
+      <h1 class="reveal d1">Cloud Config Manager</h1>
+      <p class="reveal d2">On this site u can view all the cloud configs available for antagonist lua script.</p>
+      <div class="stats reveal d3">
         <div class="stat"><div class="k" id="statProfiles">-</div><div class="v">Stored profiles</div></div>
       </div>
     </section>
@@ -412,7 +439,7 @@
           var b = Math.floor(lerp(170, 207, i / 8));
           ctx.strokeStyle = "rgba(" + r + "," + g + "," + b + "," + Math.max(0.02, alpha) + ")";
           ctx.beginPath();
-          var step = 10; // smaller step = smoother curves
+          var step = 10;
           for (var x = -60; x <= w + 60; x += step) {
             var nx = x / w;
             var y = y0 + Math.sin(nx * 6.2 + ph) * amp + Math.sin(nx * 2.6 + ph * 0.7) * (amp * 0.35);
@@ -502,9 +529,6 @@
             setMsg(msg, String(e));
           });
       };
-
-      // upload removed
-
       el("btnRefresh").click();
     })();
   </script>
