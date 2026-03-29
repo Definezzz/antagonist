@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Antagonist Cloud</title>
+  <title>Antagonist</title>
   <style>
     :root {
       --bg: #06080c;
@@ -142,7 +142,55 @@
     .card h2 { margin: 0 0 10px; font-size: 16px; font-weight: 620; letter-spacing: 0.01em; }
     .card p.hint { margin: 0 0 10px; color: var(--muted); font-size: 12px; }
     .col-4 { grid-column: span 4; }
+    .col-6 { grid-column: span 6; }
     .col-12 { grid-column: span 12; }
+
+    a.link {
+      color: #cfe0ff;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(207, 224, 255, 0.22);
+    }
+    a.link:hover { border-bottom-color: rgba(207, 224, 255, 0.55); }
+
+    .cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .price {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .price .amt { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+    .price .per { color: var(--muted); font-size: 12px; }
+
+    ul.features {
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    ul.features li {
+      margin: 7px 0;
+      padding-left: 14px;
+      position: relative;
+      color: #d9e6ff;
+      font-size: 13px;
+    }
+    ul.features li::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 99px;
+      background: rgba(142, 182, 255, 0.85);
+      position: absolute;
+      left: 0;
+      top: 8px;
+      box-shadow: 0 0 16px rgba(142, 182, 255, 0.25);
+    }
     label { display: block; margin: 10px 0 6px; color: #b7c5df; font-size: 12px; }
     input[type="text"], textarea {
       width: 100%;
@@ -209,7 +257,7 @@
     .msg.ok { color: var(--success); }
     .msg.err { color: var(--danger); }
     @media (max-width: 920px) {
-      .col-4 { grid-column: span 12; }
+      .col-4, .col-6 { grid-column: span 12; }
       .stats { grid-template-columns: 1fr; }
       .hero { padding: 24px 16px; }
     }
@@ -220,157 +268,65 @@
     <header class="nav">
       <div class="brand">
         <span class="brand-dot"></span>
-        <span>Antagonist >.<</span>
+        <span>Antagonist</span>
       </div>
     </header>
 
     <section class="hero">
-      <h1>Cloud Config Manager</h1>
-      <p>On this site u can view all the cloud configs available for antagonist lua script.</p>
+      <h1>Antagonist Lua</h1>
+      <p>
+        High-performance config & anti-aim toolkit with cloud profiles, modern UI, and constant updates.
+        Join the Discord for support + purchase.
+      </p>
+      <div class="cta">
+        <a class="link" href="/cloud">Open Cloud</a>
+        <a class="link" href="https://discord.gg/yourinvite" target="_blank" rel="noreferrer">Discord</a>
+      </div>
       <div class="stats">
-        <div class="stat"><div class="k" id="statProfiles">-</div><div class="v">Stored profiles</div></div>
+        <div class="stat"><div class="k">Fast</div><div class="v">Low overhead</div></div>
+        <div class="stat"><div class="k">Updated</div><div class="v">Frequent fixes</div></div>
+        <div class="stat"><div class="k">Cloud</div><div class="v">Profiles sync</div></div>
       </div>
     </section>
 
     <section class="grid">
-      <article class="card col-4">
-        <h2>Profiles</h2>
-        <p class="hint">View all cloud profile keys currently saved.</p>
-        <div class="row">
-          <button type="button" class="primary" id="btnRefresh">Refresh list</button>
-        </div>
-        <ul id="list"></ul>
-        <div class="msg" id="listMsg"></div>
+      <article class="card col-6">
+        <h2>Features</h2>
+        <p class="hint">A quick overview. Update this anytime you add stuff.</p>
+        <ul class="features">
+          <li>Anti-aim builder with per-state configuration</li>
+          <li>Defensive anti-aim + defensive flick</li>
+          <li>Cloud configs (upload, list, download)</li>
+          <li>Indicators / bind bar UI</li>
+          <li>Prediction / helpers (revolver, hitchance override, etc.)</li>
+          <li>Utilities (logs, optimizers, misc tools)</li>
+        </ul>
       </article>
 
-      <article class="card col-4">
-        <h2>Download</h2>
-        <p class="hint">Fetch one profile and save it as a JSON file.</p>
-        <label for="dlName">Profile name</label>
-        <input type="text" id="dlName" placeholder="myconfig - steamname" autocomplete="off" />
-        <div class="row">
-          <button type="button" class="primary" id="btnDownload">Download payload</button>
+      <article class="card col-6">
+        <h2>Pricing</h2>
+        <p class="hint">Put your real prices + payment methods here.</p>
+        <div class="price">
+          <div class="amt">$9.99</div>
+          <div class="per">/ month</div>
         </div>
-        <div class="msg" id="dlMsg"></div>
+        <div class="row" style="margin-top:12px">
+          <a class="link" href="https://discord.gg/yourinvite" target="_blank" rel="noreferrer">Buy on Discord</a>
+          <a class="link" href="/cloud">Try Cloud</a>
+        </div>
+        <div class="msg">Replace `discord.gg/yourinvite` and the price text with your real offer.</div>
       </article>
 
-      <article class="card col-4">
-        <h2>Upload</h2>
-        <p class="hint">Push a new base64 payload for a profile key.</p>
-        <label for="upName">Profile name</label>
-        <input type="text" id="upName" placeholder="myconfig - steamname" autocomplete="off" />
-        <label for="upPayload">Base64 payload</label>
-        <textarea id="upPayload" placeholder="Paste export blob from the script..."></textarea>
+      <article class="card col-12">
+        <h2>Links</h2>
+        <p class="hint">Discord is the main funnel: support, changelog, purchase, announcements.</p>
         <div class="row">
-          <button type="button" class="primary" id="btnUpload">Upload</button>
+          <a class="link" href="https://discord.gg/yourinvite" target="_blank" rel="noreferrer">Discord</a>
+          <a class="link" href="/cloud">Cloud manager</a>
+          <a class="link" href="/api/configs" target="_blank" rel="noreferrer">API</a>
         </div>
-        <div class="msg" id="upMsg"></div>
       </article>
     </section>
   </main>
-
-  <script>
-    (function () {
-      var apiBase = "";
-      function el(id) { return document.getElementById(id); }
-
-      function setMsg(node, text, ok) {
-        node.textContent = text || "";
-        node.className = "msg " + (ok ? "ok" : text ? "err" : "");
-      }
-
-      function renderList(items) {
-        var ul = el("list");
-        ul.innerHTML = "";
-        items.forEach(function (it) {
-          var n = it.name || it.key || "";
-          if (!n) return;
-          var li = document.createElement("li");
-          li.textContent = n;
-          ul.appendChild(li);
-        });
-        el("statProfiles").textContent = String(items.length);
-      }
-
-      el("btnRefresh").onclick = function () {
-        var msg = el("listMsg");
-        setMsg(msg, "Loading...", true);
-        fetch(apiBase + "/api/configs")
-          .then(function (r) {
-            if (!r.ok) throw new Error("HTTP " + r.status);
-            return r.json();
-          })
-          .then(function (data) {
-            var items = (data && data.items) || [];
-            renderList(items);
-            setMsg(msg, "Found " + items.length + " profile(s).", true);
-          })
-          .catch(function (e) {
-            setMsg(msg, String(e));
-          });
-      };
-
-      el("btnDownload").onclick = function () {
-        var name = (el("dlName").value || "").trim();
-        var msg = el("dlMsg");
-        if (!name) {
-          setMsg(msg, "Enter a profile name.");
-          return;
-        }
-        setMsg(msg, "Downloading...", true);
-        fetch(apiBase + "/api/configs?name=" + encodeURIComponent(name))
-          .then(function (r) {
-            if (!r.ok) throw new Error("HTTP " + r.status);
-            return r.json();
-          })
-          .then(function (data) {
-            if (!data || !data.payload) throw new Error("No payload in response");
-            var blob = JSON.stringify(data, null, 2);
-            var a = document.createElement("a");
-            a.href = URL.createObjectURL(new Blob([blob], { type: "application/json" }));
-            a.download = name + ".json";
-            a.click();
-            URL.revokeObjectURL(a.href);
-            setMsg(msg, "Saved " + name + ".json", true);
-          })
-          .catch(function (e) {
-            setMsg(msg, String(e));
-          });
-      };
-
-      el("btnUpload").onclick = function () {
-        var name = (el("upName").value || "").trim();
-        var payload = (el("upPayload").value || "").trim();
-        var msg = el("upMsg");
-        if (!name || !payload) {
-          setMsg(msg, "Name and payload are required.");
-          return;
-        }
-        setMsg(msg, "Uploading...", true);
-        fetch(apiBase + "/api/configs", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: name, payload: payload })
-        })
-          .then(function (r) {
-            if (!r.ok) {
-              return r.json().then(function (j) {
-                throw new Error((j && j.error) || ("HTTP " + r.status));
-              });
-            }
-            return r.json();
-          })
-          .then(function () {
-            setMsg(msg, "Uploaded " + name + ".", true);
-            el("btnRefresh").click();
-          })
-          .catch(function (e) {
-            setMsg(msg, String(e));
-          });
-      };
-
-      el("btnRefresh").click();
-    })();
-  </script>
 </body>
 </html>
