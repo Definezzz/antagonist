@@ -6,19 +6,20 @@
   <title>Antagonist</title>
   <style>
     :root {
-      --bg: #050805;
-      --bg-soft: #08130c;
-      --panel: rgba(10, 16, 12, 0.72);
-      --panel-strong: rgba(8, 12, 10, 0.92);
-      --border: rgba(165, 207, 170, 0.22);
-      --text: #eef3ff;
-      --muted: #94a2bc;
+      --bg: #040604;
+      --bg-soft: #07110a;
+      --panel: rgba(8, 12, 10, 0.58);
+      --panel-strong: rgba(8, 12, 10, 0.86);
+      --border: rgba(165, 207, 170, 0.18);
+      --text: #eef7f0;
+      --muted: rgba(238, 247, 240, 0.62);
       --accent: #a5cfaa;
       --accent-2: #3dc3cf;
       --success: #73e2a7;
       --danger: #ff7b9a;
       --shadow: 0 18px 55px rgba(0, 0, 0, 0.45);
       --radius: 16px;
+      --ring: rgba(165, 207, 170, 0.18);
     }
     * { box-sizing: border-box; }
     html, body {
@@ -29,9 +30,11 @@
         radial-gradient(950px 580px at -10% 5%, rgba(61, 195, 207, 0.12), transparent 62%),
         linear-gradient(180deg, #040605 0%, #030503 45%, #020403 100%);
       color: var(--text);
-      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
       line-height: 1.45;
     }
+    a { color: inherit; text-decoration: none; }
+    ::selection { background: rgba(165, 207, 170, 0.28); }
 
     #webgl {
       width: 100%;
@@ -50,16 +53,16 @@
     .container {
       position: relative;
       z-index: 1;
-      max-width: 1100px;
+      max-width: 1120px;
       margin: 0 auto;
-      padding: 28px 18px 42px;
+      padding: 30px 18px 54px;
     }
     .nav {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 14px;
-      margin-bottom: 30px;
+      margin-bottom: 26px;
     }
     .brand {
       display: flex;
@@ -75,38 +78,97 @@
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
       box-shadow: 0 0 18px rgba(165, 207, 170, 0.55);
     }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 34px;
+      padding: 0 12px;
+      border: 1px solid rgba(165, 207, 170, 0.20);
+      border-radius: 999px;
+      background: rgba(8, 12, 10, 0.55);
+      backdrop-filter: blur(10px);
+      color: rgba(238, 247, 240, 0.78);
+      font-size: 12px;
+      letter-spacing: 0.02em;
+    }
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 99px;
+      background: rgba(165, 207, 170, 0.95);
+      box-shadow: 0 0 18px rgba(165, 207, 170, 0.30);
+    }
     .hero {
       border: 1px solid var(--border);
-      border-radius: 24px;
-      background: linear-gradient(180deg, rgba(12, 18, 14, 0.92) 0%, rgba(7, 10, 8, 0.88) 100%);
-      box-shadow: var(--shadow);
-      padding: 30px 24px;
-      margin-bottom: 18px;
+      border-radius: 26px;
+      background:
+        radial-gradient(900px 460px at 30% -30%, rgba(165, 207, 170, 0.18), transparent 60%),
+        radial-gradient(900px 460px at 110% 0%, rgba(61, 195, 207, 0.12), transparent 55%),
+        linear-gradient(180deg, rgba(10, 16, 12, 0.92) 0%, rgba(6, 9, 7, 0.88) 100%);
+      box-shadow: 0 24px 75px rgba(0, 0, 0, 0.55);
+      padding: 34px 28px;
+      margin-bottom: 16px;
       overflow: hidden;
       position: relative;
     }
     .hero::after {
       content: "";
       position: absolute;
-      right: -120px;
-      top: -120px;
-      width: 280px;
-      height: 280px;
+      right: -140px;
+      top: -140px;
+      width: 320px;
+      height: 320px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(165, 207, 170, 0.16), transparent 70%);
+      background: radial-gradient(circle, rgba(165, 207, 170, 0.16), transparent 65%);
       pointer-events: none;
     }
     .hero h1 {
       margin: 0 0 10px;
-      font-size: clamp(30px, 4vw, 45px);
-      line-height: 1.06;
+      font-size: clamp(36px, 5vw, 64px);
+      line-height: 1.02;
       letter-spacing: -0.02em;
     }
     .hero p {
       margin: 0;
-      max-width: 800px;
+      max-width: 720px;
       color: var(--muted);
       font-size: 15px;
+    }
+    .hero-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(165, 207, 170, 0.22);
+      background: rgba(8, 12, 10, 0.45);
+      backdrop-filter: blur(10px);
+      color: rgba(238, 247, 240, 0.78);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .badge i {
+      font-style: normal;
+      width: 9px;
+      height: 9px;
+      border-radius: 99px;
+      background: rgba(165, 207, 170, 0.95);
+      box-shadow: 0 0 18px rgba(165, 207, 170, 0.30);
     }
     .stats {
       display: grid;
@@ -116,12 +178,19 @@
     }
     .stat {
       border: 1px solid var(--border);
-      border-radius: 12px;
-      background: rgba(7, 10, 8, 0.74);
-      padding: 13px;
+      border-radius: 14px;
+      background: rgba(7, 10, 8, 0.58);
+      padding: 14px;
+      backdrop-filter: blur(10px);
+      transition: transform 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
     }
-    .stat .k { color: #eaf6ee; font-size: 20px; font-weight: 700; }
-    .stat .v { color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .stat:hover {
+      transform: translateY(-1px);
+      border-color: rgba(165, 207, 170, 0.30);
+      background: rgba(9, 14, 11, 0.66);
+    }
+    .stat .k { color: rgba(238, 247, 240, 0.92); font-size: 18px; font-weight: 750; letter-spacing: -0.01em; }
+    .stat .v { color: rgba(238, 247, 240, 0.60); font-size: 12px; margin-top: 4px; }
     .grid {
       display: grid;
       grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -130,24 +199,56 @@
     .card {
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      background: var(--panel);
-      backdrop-filter: blur(8px);
-      box-shadow: var(--shadow);
-      padding: 16px;
+      background:
+        linear-gradient(180deg, rgba(10, 16, 12, 0.62), rgba(6, 9, 7, 0.52));
+      backdrop-filter: blur(12px);
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.45);
+      padding: 18px 18px 16px;
       min-height: 150px;
+      transition: transform 0.15s ease, border-color 0.15s ease;
     }
-    .card h2 { margin: 0 0 10px; font-size: 16px; font-weight: 620; letter-spacing: 0.01em; }
-    .card p.hint { margin: 0 0 10px; color: var(--muted); font-size: 12px; }
+    .card:hover { transform: translateY(-1px); border-color: rgba(165, 207, 170, 0.28); }
+    .card h2 { margin: 0 0 10px; font-size: 16px; font-weight: 700; letter-spacing: 0.01em; }
+    .card p.hint { margin: 0 0 10px; color: rgba(238, 247, 240, 0.58); font-size: 12px; }
     .col-4 { grid-column: span 4; }
     .col-6 { grid-column: span 6; }
     .col-12 { grid-column: span 12; }
 
-    a.link {
-      color: #d6f2dc;
-      text-decoration: none;
-      border-bottom: 1px solid rgba(165, 207, 170, 0.22);
+    .link {
+      color: rgba(238, 247, 240, 0.86);
+      border-bottom: 1px solid rgba(165, 207, 170, 0.18);
     }
-    a.link:hover { border-bottom-color: rgba(165, 207, 170, 0.55); }
+    .link:hover { border-bottom-color: rgba(165, 207, 170, 0.55); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      height: 42px;
+      padding: 0 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(165, 207, 170, 0.22);
+      background: rgba(8, 12, 10, 0.55);
+      backdrop-filter: blur(10px);
+      color: rgba(238, 247, 240, 0.92);
+      font-size: 13px;
+      font-weight: 650;
+      letter-spacing: 0.01em;
+      transition: transform 0.10s ease, border-color 0.15s ease, filter 0.15s ease;
+    }
+    .btn:hover { border-color: rgba(165, 207, 170, 0.42); filter: brightness(1.06); }
+    .btn:active { transform: translateY(1px); }
+    .btn.primary {
+      border-color: rgba(165, 207, 170, 0.65);
+      background: linear-gradient(180deg, rgba(95, 170, 112, 0.58), rgba(30, 88, 56, 0.66));
+      box-shadow: 0 16px 55px rgba(165, 207, 170, 0.16);
+    }
+    .btn.ghost {
+      border-color: rgba(165, 207, 170, 0.16);
+      color: rgba(238, 247, 240, 0.78);
+      background: rgba(8, 12, 10, 0.35);
+    }
 
     .cta {
       display: flex;
@@ -174,7 +275,7 @@
       margin: 7px 0;
       padding-left: 14px;
       position: relative;
-      color: #e8f6ec;
+      color: rgba(238, 247, 240, 0.90);
       font-size: 13px;
     }
     ul.features li::before {
@@ -206,7 +307,7 @@
       box-shadow: 0 0 0 3px rgba(165, 207, 170, 0.14);
     }
     textarea { min-height: 130px; resize: vertical; }
-    .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 11px; }
+    .row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 14px; }
     button {
       border: 1px solid rgba(129, 154, 200, 0.36);
       background: linear-gradient(180deg, rgba(20, 34, 24, 0.92) 0%, rgba(12, 22, 16, 0.92) 100%);
@@ -256,7 +357,7 @@
     @media (max-width: 920px) {
       .col-4, .col-6 { grid-column: span 12; }
       .stats { grid-template-columns: 1fr; }
-      .hero { padding: 24px 16px; }
+      .hero { padding: 26px 16px; }
     }
   </style>
 </head>
@@ -268,17 +369,25 @@
         <span class="brand-dot"></span>
         <span>Antagonist >.<</span>
       </div>
+      <div class="nav-right">
+        <span class="pill"><span class="pill-dot"></span> Cloud-ready</span>
+        <a class="btn ghost" href="/cloud">Cloud</a>
+      </div>
     </header>
 
     <section class="hero">
+      <div class="hero-top">
+        <span class="badge"><i></i> Premium lua</span>
+        <a class="btn primary" href="/cloud">Open cloud</a>
+      </div>
       <h1>Antagonist.Lua</h1>
       <p>
         High-performance config & anti-aim toolkit with cloud profiles, modern UI, and constant updates.
         Join the Discord for support + purchase.
       </p>
       <div class="cta">
-        <a class="link" href="/cloud">Open Cloud</a>
-        <a class="link" href="https://discord.gg/https://discord.gg/9FbB4nX4Km" target="_blank" rel="noreferrer">Discord</a>
+        <a class="btn primary" href="https://discord.gg/9FbB4nX4Km" target="_blank" rel="noreferrer">Join Discord</a>
+        <a class="btn ghost" href="/cloud">Manage configs</a>
       </div>
       <div class="stats">
         <div class="stat"><div class="k">Fast</div><div class="v">Low overhead</div></div>
@@ -341,12 +450,12 @@
       window.addEventListener("resize", resize, { passive: true });
 
       function lerp(a, b, t) { return a + (b - a) * t; }
-
       function draw(t) {
         t *= 0.001;
         var w = window.innerWidth, h = window.innerHeight;
         ctx.clearRect(0, 0, w, h);
 
+        // soft base glow
         var g1 = ctx.createRadialGradient(w * 0.72, h * 0.10, 0, w * 0.72, h * 0.10, Math.max(w, h) * 0.9);
         g1.addColorStop(0, "rgba(165,207,170,0.16)");
         g1.addColorStop(0.55, "rgba(165,207,170,0.04)");
@@ -360,6 +469,7 @@
         g2.addColorStop(1, "rgba(0,0,0,0)");
         ctx.fillStyle = g2;
         ctx.fillRect(0, 0, w, h);
+
         ctx.globalCompositeOperation = "screen";
         ctx.lineWidth = 1.35;
         ctx.shadowColor = "rgba(165,207,170,0.25)";
