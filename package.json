@@ -1,0 +1,8 @@
+{
+  "name": "antagonist-cloud-vercel",
+  "private": true,
+  "dependencies": {
+    "@upstash/redis": "^1.37.0",
+    "ioredis": "^5.4.2"
+  }
+}

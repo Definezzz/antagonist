@@ -1,9 +1,55 @@
 const fs = require("fs");
 const path = require("path");
 
+/**
+ * IMPORTANT (Vercel serverless):
+ * `/tmp` is ephemeral — use a real Redis in production.
+ *
+ * Supported env (first match wins):
+ * 1) `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` (or legacy `KV_REST_*`) — HTTP REST
+ * 2) `REDIS_URL` — TCP `redis://…` / `rediss://…` (Redis Cloud, Vercel Redis quickstart, etc.)
+ *
+ * Put secrets in Vercel → Project → Settings → Environment Variables, or `.env.local` for `vercel dev`.
+ */
 const STORE_PATH = path.join("/tmp", "antagonist-cloud-configs.json");
+const KV_NAMES_KEY = "antagonist:cloud:names";
+const kvPayloadKey = (name) => `antagonist:cloud:payload:${name}`;
 
-function readStore() {
+let ioredisSingleton = null;
+
+function getRedis() {
+  const restUrl = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+  const restToken = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+  if (restUrl && restToken) {
+    try {
+      const { Redis } = require("@upstash/redis");
+      return new Redis({ url: restUrl, token: restToken });
+    } catch (e) {
+      console.error("antagonist-cloud: @upstash/redis init failed — run npm install", e.message);
+    }
+  }
+
+  const tcpUrl = process.env.REDIS_URL;
+  if (tcpUrl && typeof tcpUrl === "string") {
+    try {
+      const IoRedis = require("ioredis");
+      if (!ioredisSingleton) {
+        ioredisSingleton = new IoRedis(tcpUrl, {
+          maxRetriesPerRequest: 3,
+          connectTimeout: 15000,
+          lazyConnect: false
+        });
+      }
+      return ioredisSingleton;
+    } catch (e) {
+      console.error("antagonist-cloud: ioredis init failed — run npm install", e.message);
+    }
+  }
+
+  return null;
+}
+
+function readStoreFile() {
   try {
     return JSON.parse(fs.readFileSync(STORE_PATH, "utf8"));
   } catch {
@@ -11,8 +57,43 @@ function readStore() {
   }
 }
 
-function writeStore(obj) {
+function writeStoreFile(obj) {
   fs.writeFileSync(STORE_PATH, JSON.stringify(obj));
+}
+
+async function redisListNames(redis) {
+  const raw = await redis.get(KV_NAMES_KEY);
+  if (raw == null) return [];
+  let names;
+  try {
+    names = typeof raw === "string" ? JSON.parse(raw) : raw;
+  } catch {
+    return [];
+  }
+  if (!Array.isArray(names)) return [];
+  return names.filter((n) => typeof n === "string").sort();
+}
+
+async function redisGetName(redis, name) {
+  return redis.get(kvPayloadKey(name));
+}
+
+async function redisSetName(redis, name, payload) {
+  await redis.set(kvPayloadKey(name), payload);
+  const raw = await redis.get(KV_NAMES_KEY);
+  let names = [];
+  if (raw != null) {
+    try {
+      const parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
+      if (Array.isArray(parsed)) names = parsed;
+    } catch {
+      names = [];
+    }
+  }
+  if (!names.includes(name)) {
+    names.push(name);
+    await redis.set(KV_NAMES_KEY, JSON.stringify(names));
+  }
 }
 
 function setCors(res) {
@@ -38,13 +119,20 @@ module.exports = async (req, res) => {
     return res.end();
   }
 
-  const store = readStore();
+  const redis = getRedis();
 
   if (req.method === "GET") {
     const q = req.query || {};
     const name = Array.isArray(q.name) ? q.name[0] : q.name;
+
     if (name && typeof name === "string") {
-      const payload = store[name];
+      let payload = null;
+      if (redis) {
+        payload = await redisGetName(redis, name);
+      } else {
+        const store = readStoreFile();
+        payload = store[name];
+      }
       if (payload == null) {
         res.statusCode = 404;
         return res.end(JSON.stringify({ error: "not found" }));
@@ -52,9 +140,17 @@ module.exports = async (req, res) => {
       res.setHeader("Content-Type", "application/json; charset=utf-8");
       return res.end(JSON.stringify({ payload: String(payload) }));
     }
-    const items = Object.keys(store)
-      .sort()
-      .map((n) => ({ name: n }));
+
+    let items;
+    if (redis) {
+      const names = await redisListNames(redis);
+      items = names.map((n) => ({ name: n }));
+    } else {
+      const store = readStoreFile();
+      items = Object.keys(store)
+        .sort()
+        .map((n) => ({ name: n }));
+    }
     res.setHeader("Content-Type", "application/json; charset=utf-8");
     return res.end(JSON.stringify({ items }));
   }
@@ -81,8 +177,7 @@ module.exports = async (req, res) => {
       res.statusCode = 400;
       return res.end(JSON.stringify({ error: "expected json body" }));
     }
-    const name = body.name;
-    const payload = body.payload;
+    const { name, payload } = body;
     if (
       !name ||
       typeof name !== "string" ||
@@ -100,8 +195,15 @@ module.exports = async (req, res) => {
       res.statusCode = 400;
       return res.end(JSON.stringify({ error: "payload must be non-empty string" }));
     }
-    store[name] = payload;
-    writeStore(store);
+
+    if (redis) {
+      await redisSetName(redis, name, payload);
+    } else {
+      const store = readStoreFile();
+      store[name] = payload;
+      writeStoreFile(store);
+    }
+
     res.setHeader("Content-Type", "application/json; charset=utf-8");
     return res.end(JSON.stringify({ ok: true, name }));
   }
