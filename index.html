@@ -48,6 +48,35 @@
     a { color: inherit; text-decoration: none; }
     ::selection { background: rgba(165, 207, 170, 0.28); }
 
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(165, 207, 170, 0.55) rgba(6, 10, 8, 0.92);
+    }
+    ::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
+    ::-webkit-scrollbar-track {
+      background: linear-gradient(180deg, rgba(7, 11, 9, 0.95), rgba(5, 8, 6, 0.95));
+      border-left: 1px solid rgba(165, 207, 170, 0.12);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, rgba(165, 207, 170, 0.70), rgba(108, 167, 118, 0.78));
+      border: 2px solid rgba(6, 10, 8, 0.95);
+      border-radius: 999px;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.10), 0 0 14px rgba(165, 207, 170, 0.22);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, rgba(180, 220, 184, 0.82), rgba(126, 188, 136, 0.88));
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16), 0 0 18px rgba(165, 207, 170, 0.30);
+    }
+    ::-webkit-scrollbar-thumb:active {
+      background: linear-gradient(180deg, rgba(195, 231, 199, 0.9), rgba(142, 201, 151, 0.94));
+    }
+    ::-webkit-scrollbar-corner {
+      background: rgba(5, 8, 6, 0.95);
+    }
+
     :root {
       --cursor-dot: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A//www.w3.org/2000/svg'%20width%3D'24'%20height%3D'24'%20viewBox%3D'0%200%2024%2024'%3E%3Ccircle%20cx%3D'12'%20cy%3D'12'%20r%3D'4'%20fill%3D'%23a5cfaa'/%3E%3Ccircle%20cx%3D'12'%20cy%3D'12'%20r%3D'9'%20fill%3D'none'%20stroke%3D'rgba(165%2C207%2C170%2C0.45)'%20stroke-width%3D'2'/%3E%3C/svg%3E");
       --cursor-pointer: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A//www.w3.org/2000/svg'%20width%3D'32'%20height%3D'32'%20viewBox%3D'0%200%2032%2032'%3E%3Ccircle%20cx%3D'16'%20cy%3D'16'%20r%3D'5'%20fill%3D'%23a5cfaa'/%3E%3Ccircle%20cx%3D'16'%20cy%3D'16'%20r%3D'12'%20fill%3D'none'%20stroke%3D'rgba(165%2C207%2C170%2C0.55)'%20stroke-width%3D'2'/%3E%3Cpath%20d%3D'M21%2016h6'%20stroke%3D'rgba(165%2C207%2C170%2C0.55)'%20stroke-width%3D'2'%20stroke-linecap%3D'round'/%3E%3C/svg%3E");
