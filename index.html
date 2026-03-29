@@ -33,22 +33,19 @@
       line-height: 1.45;
     }
 
-    body::before {
-      content: "";
+    #webgl {
+      width: 100%;
+      height: 100svh;
       position: fixed;
-      inset: 0;
-      pointer-events: none;
+      top: 0;
+      left: 0;
       z-index: 0;
-      opacity: 0.55;
-      background-image:
-        url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'1400'%20height%3D'900'%20viewBox%3D'0%200%201400%20900'%3E%3Cdefs%3E%3CradialGradient%20id%3D'g'%20cx%3D'50%25'%20cy%3D'18%25'%20r%3D'70%25'%3E%3Cstop%20offset%3D'0%25'%20stop-color%3D'%23a5cfaa'%20stop-opacity%3D'0.20'%2F%3E%3Cstop%20offset%3D'55%25'%20stop-color%3D'%23a5cfaa'%20stop-opacity%3D'0.05'%2F%3E%3Cstop%20offset%3D'100%25'%20stop-color%3D'%23a5cfaa'%20stop-opacity%3D'0'%2F%3E%3C%2FradialGradient%3E%3ClinearGradient%20id%3D'm'%20x1%3D'0'%20x2%3D'0'%20y1%3D'0'%20y2%3D'1'%3E%3Cstop%20offset%3D'0'%20stop-color%3D'%23ffffff'%20stop-opacity%3D'0.16'%2F%3E%3Cstop%20offset%3D'1'%20stop-color%3D'%23ffffff'%20stop-opacity%3D'0.02'%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D'1400'%20height%3D'900'%20fill%3D'url(%23g)'%2F%3E%3Cg%20fill%3D'none'%20stroke%3D'url(%23m)'%20stroke-width%3D'1'%20opacity%3D'0.45'%3E%3Cpath%20d%3D'M-80%2C120%20C220%2C40%20480%2C200%20760%2C120%20S1260%2C60%201520%2C150'%2F%3E%3Cpath%20d%3D'M-90%2C170%20C190%2C70%20490%2C250%20790%2C160%20S1280%2C120%201520%2C210'%2F%3E%3Cpath%20d%3D'M-110%2C230%20C160%2C110%20480%2C310%20790%2C220%20S1280%2C190%201520%2C280'%2F%3E%3Cpath%20d%3D'M-140%2C300%20C120%2C160%20480%2C380%20790%2C290%20S1280%2C250%201520%2C350'%2F%3E%3Cpath%20d%3D'M-180%2C390%20C80%2C240%20480%2C470%20790%2C380%20S1280%2C330%201520%2C430'%2F%3E%3Cpath%20d%3D'M-220%2C500%20C40%2C340%20480%2C580%20790%2C490%20S1280%2C430%201520%2C540'%2F%3E%3Cpath%20d%3D'M-260%2C630%20C20%2C470%20470%2C710%20790%2C620%20S1280%2C560%201520%2C700'%2F%3E%3Cpath%20d%3D'M-300%2C770%20C0%2C620%20460%2C840%20790%2C760%20S1280%2C720%201520%2C820'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center top;
-      mix-blend-mode: screen;
-      filter: blur(0.1px);
-      -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.55) 38%, rgba(0,0,0,0.12) 70%, rgba(0,0,0,0) 100%);
-      mask-image: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.55) 38%, rgba(0,0,0,0.12) 70%, rgba(0,0,0,0) 100%);
+      pointer-events: none;
+    }
+    #webgl canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
     }
     .container {
       position: relative;
@@ -265,6 +262,7 @@
 </head>
 <body>
   <main class="container">
+    <div id="webgl" aria-hidden="true"><canvas id="bg"></canvas></div>
     <header class="nav">
       <div class="brand">
         <span class="brand-dot"></span>
@@ -323,5 +321,77 @@
       </article>
     </section>
   </main>
+  <script>
+    (function () {
+      var c = document.getElementById("bg");
+      if (!c) return;
+      var dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      var ctx = c.getContext("2d", { alpha: true });
+      if (!ctx) return;
+
+      function resize() {
+        var w = window.innerWidth, h = window.innerHeight;
+        c.width = Math.floor(w * dpr);
+        c.height = Math.floor(h * dpr);
+        c.style.width = w + "px";
+        c.style.height = h + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      resize();
+      window.addEventListener("resize", resize, { passive: true });
+
+      function lerp(a, b, t) { return a + (b - a) * t; }
+
+      function draw(t) {
+        t *= 0.001;
+        var w = window.innerWidth, h = window.innerHeight;
+        ctx.clearRect(0, 0, w, h);
+
+        var g1 = ctx.createRadialGradient(w * 0.72, h * 0.10, 0, w * 0.72, h * 0.10, Math.max(w, h) * 0.9);
+        g1.addColorStop(0, "rgba(165,207,170,0.16)");
+        g1.addColorStop(0.55, "rgba(165,207,170,0.04)");
+        g1.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = g1;
+        ctx.fillRect(0, 0, w, h);
+
+        var g2 = ctx.createRadialGradient(w * 0.12, h * 0.15, 0, w * 0.12, h * 0.15, Math.max(w, h) * 0.8);
+        g2.addColorStop(0, "rgba(61,195,207,0.10)");
+        g2.addColorStop(0.6, "rgba(61,195,207,0.03)");
+        g2.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = g2;
+        ctx.fillRect(0, 0, w, h);
+        ctx.globalCompositeOperation = "screen";
+        ctx.lineWidth = 1;
+        for (var i = 0; i < 9; i++) {
+          var y0 = 120 + i * 70;
+          var amp = 34 + i * 2;
+          var spd = 0.35 + i * 0.03;
+          var ph = t * spd + i * 0.65;
+          var alpha = 0.10 - i * 0.006;
+          var r = Math.floor(lerp(165, 61, i / 8));
+          var g = Math.floor(lerp(207, 195, i / 8));
+          var b = Math.floor(lerp(170, 207, i / 8));
+          ctx.strokeStyle = "rgba(" + r + "," + g + "," + b + "," + Math.max(0.02, alpha) + ")";
+          ctx.beginPath();
+          for (var x = -60; x <= w + 60; x += 20) {
+            var nx = x / w;
+            var y = y0 + Math.sin(nx * 6.2 + ph) * amp + Math.sin(nx * 2.6 + ph * 0.7) * (amp * 0.35);
+            if (x === -60) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+        }
+        ctx.globalCompositeOperation = "source-over";
+        var vg = ctx.createRadialGradient(w * 0.5, h * 0.4, Math.min(w, h) * 0.1, w * 0.5, h * 0.4, Math.max(w, h) * 0.9);
+        vg.addColorStop(0, "rgba(0,0,0,0)");
+        vg.addColorStop(1, "rgba(0,0,0,0.65)");
+        ctx.fillStyle = vg;
+        ctx.fillRect(0, 0, w, h);
+
+        requestAnimationFrame(draw);
+      }
+      requestAnimationFrame(draw);
+    })();
+  </script>
 </body>
 </html>
