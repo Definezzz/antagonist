@@ -205,8 +205,20 @@
       padding: 18px 18px 16px;
       min-height: 150px;
       transition: transform 0.15s ease, border-color 0.15s ease;
+      position: relative;
+      overflow: hidden;
     }
     .card:hover { transform: translateY(-1px); border-color: rgba(165, 207, 170, 0.28); }
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      background: radial-gradient(700px 220px at 25% 0%, rgba(165, 207, 170, 0.10), transparent 60%);
+      transition: opacity 0.20s ease;
+      pointer-events: none;
+    }
+    .card:hover::before { opacity: 1; }
     .card h2 { margin: 0 0 10px; font-size: 16px; font-weight: 620; letter-spacing: 0.01em; }
     .card p.hint { margin: 0 0 10px; color: var(--muted); font-size: 12px; }
     .col-4 { grid-column: span 4; }
@@ -335,18 +347,7 @@
         <div class="msg" id="dlMsg"></div>
       </article>
 
-      <article class="card col-4">
-        <h2>Upload</h2>
-        <p class="hint">Push a new base64 payload for a profile key.</p>
-        <label for="upName">Profile name</label>
-        <input type="text" id="upName" placeholder="myconfig - steamname" autocomplete="off" />
-        <label for="upPayload">Base64 payload</label>
-        <textarea id="upPayload" placeholder="Paste export blob from the script..."></textarea>
-        <div class="row">
-          <button type="button" class="primary" id="btnUpload">Upload</button>
-        </div>
-        <div class="msg" id="upMsg"></div>
-      </article>
+      <!-- upload removed -->
     </section>
   </main>
 
@@ -371,8 +372,14 @@
 
       function lerp(a, b, t) { return a + (b - a) * t; }
 
-      function draw(t) {
-        t *= 0.001;
+      var prevTs = 0;
+      var smoothT = 0;
+      function draw(ts) {
+        if (!prevTs) prevTs = ts;
+        var dt = Math.min(0.05, Math.max(0.0, (ts - prevTs) / 1000));
+        prevTs = ts;
+        smoothT += dt;
+        var t = smoothT;
         var w = window.innerWidth, h = window.innerHeight;
         ctx.clearRect(0, 0, w, h);
 
@@ -405,7 +412,8 @@
           var b = Math.floor(lerp(170, 207, i / 8));
           ctx.strokeStyle = "rgba(" + r + "," + g + "," + b + "," + Math.max(0.02, alpha) + ")";
           ctx.beginPath();
-          for (var x = -60; x <= w + 60; x += 20) {
+          var step = 10; // smaller step = smoother curves
+          for (var x = -60; x <= w + 60; x += step) {
             var nx = x / w;
             var y = y0 + Math.sin(nx * 6.2 + ph) * amp + Math.sin(nx * 2.6 + ph * 0.7) * (amp * 0.35);
             if (x === -60) ctx.moveTo(x, y);
@@ -495,36 +503,7 @@
           });
       };
 
-      el("btnUpload").onclick = function () {
-        var name = (el("upName").value || "").trim();
-        var payload = (el("upPayload").value || "").trim();
-        var msg = el("upMsg");
-        if (!name || !payload) {
-          setMsg(msg, "Name and payload are required.");
-          return;
-        }
-        setMsg(msg, "Uploading...", true);
-        fetch(apiBase + "/api/configs", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: name, payload: payload })
-        })
-          .then(function (r) {
-            if (!r.ok) {
-              return r.json().then(function (j) {
-                throw new Error((j && j.error) || ("HTTP " + r.status));
-              });
-            }
-            return r.json();
-          })
-          .then(function () {
-            setMsg(msg, "Uploaded " + name + ".", true);
-            el("btnRefresh").click();
-          })
-          .catch(function (e) {
-            setMsg(msg, String(e));
-          });
-      };
+      // upload removed
 
       el("btnRefresh").click();
     })();

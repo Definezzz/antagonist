@@ -220,6 +220,81 @@
     }
     .link:hover { border-bottom-color: rgba(165, 207, 170, 0.55); }
 
+    .link-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(165, 207, 170, 0.14);
+      background: rgba(6, 9, 7, 0.38);
+      backdrop-filter: blur(10px);
+      transition: transform 0.18s ease, border-color 0.18s ease, background-color 0.18s ease, filter 0.18s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .link-row::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      background: radial-gradient(520px 160px at 20% 0%, rgba(165, 207, 170, 0.16), transparent 60%);
+      transition: opacity 0.20s ease;
+      pointer-events: none;
+    }
+    .link-row:hover {
+      transform: translateY(-1px);
+      border-color: rgba(165, 207, 170, 0.32);
+      background: rgba(8, 12, 10, 0.54);
+      filter: brightness(1.06);
+    }
+    .link-row:hover::before { opacity: 1; }
+    .link-row:active { transform: translateY(0px); }
+    .link-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+    .link-title {
+      font-weight: 720;
+      color: rgba(238, 247, 240, 0.92);
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .link-sub {
+      font-size: 12px;
+      color: rgba(238, 247, 240, 0.58);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .link-right {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      flex: none;
+      color: rgba(238, 247, 240, 0.70);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .chev {
+      width: 8px;
+      height: 8px;
+      border-right: 2px solid rgba(238, 247, 240, 0.52);
+      border-top: 2px solid rgba(238, 247, 240, 0.52);
+      transform: rotate(45deg);
+      transition: transform 0.18s ease, border-color 0.18s ease;
+    }
+    .link-row:hover .chev {
+      transform: translateX(2px) rotate(45deg);
+      border-color: rgba(165, 207, 170, 0.72);
+    }
+
     .btn {
       display: inline-flex;
       align-items: center;
@@ -249,6 +324,21 @@
       color: rgba(238, 247, 240, 0.78);
       background: rgba(8, 12, 10, 0.35);
     }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      background: radial-gradient(700px 220px at 25% 0%, rgba(165, 207, 170, 0.10), transparent 60%);
+      transition: opacity 0.20s ease;
+      pointer-events: none;
+    }
+    .card:hover::before { opacity: 1; }
 
     .cta {
       display: flex;
@@ -424,8 +514,28 @@
       <article class="card col-12">
         <h2>Links</h2>
         <p class="hint">Discord is the main funnel: support, changelog, purchase, announcements.</p>
-        <div class="row">
-          <a class="link" href="https://discord.gg/9FbB4nX4Km" target="_blank" rel="noreferrer">Discord</a>
+        <div class="row" style="gap:12px">
+          <a class="link-row" href="https://discord.gg/9FbB4nX4Km" target="_blank" rel="noreferrer">
+            <span class="link-left">
+              <span class="link-title">Discord</span>
+              <span class="link-sub">Support • changelog • purchase • announcements</span>
+            </span>
+            <span class="link-right">Open <span class="chev" aria-hidden="true"></span></span>
+          </a>
+          <a class="link-row" href="/cloud">
+            <span class="link-left">
+              <span class="link-title">Cloud manager</span>
+              <span class="link-sub">View & download configs</span>
+            </span>
+            <span class="link-right">Open <span class="chev" aria-hidden="true"></span></span>
+          </a>
+          <a class="link-row" href="/api/configs">
+            <span class="link-left">
+              <span class="link-title">API</span>
+              <span class="link-sub">`GET /api/configs`</span>
+            </span>
+            <span class="link-right">Open <span class="chev" aria-hidden="true"></span></span>
+          </a>
         </div>
       </article>
     </section>
@@ -450,8 +560,15 @@
       window.addEventListener("resize", resize, { passive: true });
 
       function lerp(a, b, t) { return a + (b - a) * t; }
-      function draw(t) {
-        t *= 0.001;
+
+      var prevTs = 0;
+      var smoothT = 0;
+      function draw(ts) {
+        if (!prevTs) prevTs = ts;
+        var dt = Math.min(0.05, Math.max(0.0, (ts - prevTs) / 1000));
+        prevTs = ts;
+        smoothT += dt;
+        var t = smoothT;
         var w = window.innerWidth, h = window.innerHeight;
         ctx.clearRect(0, 0, w, h);
 
@@ -485,7 +602,8 @@
           var b = Math.floor(lerp(170, 207, i / 8));
           ctx.strokeStyle = "rgba(" + r + "," + g + "," + b + "," + Math.max(0.02, alpha) + ")";
           ctx.beginPath();
-          for (var x = -60; x <= w + 60; x += 20) {
+          var step = 10; // smaller step = smoother curves
+          for (var x = -60; x <= w + 60; x += step) {
             var nx = x / w;
             var y = y0 + Math.sin(nx * 6.2 + ph) * amp + Math.sin(nx * 2.6 + ph * 0.7) * (amp * 0.35);
             if (x === -60) ctx.moveTo(x, y);
