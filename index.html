@@ -142,32 +142,71 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 14px;
+      gap: 16px;
+      flex-wrap: wrap;
       margin-bottom: 28px;
-      padding: 10px 4px;
-      border-radius: 14px;
-      border: 1px solid rgba(165, 207, 170, 0.08);
-      background: rgba(5, 8, 6, 0.35);
+      position: relative;
+      overflow: hidden;
+      padding: 14px 20px 14px 28px;
+      border-radius: 22px;
+      border: 1px solid rgba(165, 207, 170, 0.28);
+      background:
+        radial-gradient(420px 120px at 15% 0%, rgba(165, 207, 170, 0.20), transparent 55%),
+        radial-gradient(260px 100px at 95% 80%, rgba(61, 195, 207, 0.12), transparent 60%),
+        linear-gradient(175deg, rgba(14, 22, 16, 0.92), rgba(6, 10, 7, 0.88));
+      box-shadow:
+        0 20px 56px rgba(0, 0, 0, 0.45),
+        0 0 0 1px rgba(165, 207, 170, 0.06) inset,
+        0 1px 0 rgba(255, 255, 255, 0.06) inset;
     }
     .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-weight: 650;
-      letter-spacing: 0.01em;
-      font-weight: 720;
+      gap: 14px;
+      min-width: 0;
+      flex-shrink: 0;
     }
     .brand-dot {
       width: 10px;
       height: 10px;
+      flex-shrink: 0;
       border-radius: 50%;
+      margin-left: 4px;
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
       box-shadow: 0 0 18px rgba(165, 207, 170, 0.55);
+    }
+    .nav-brand-name {
+      font-size: 15px;
+      font-weight: 780;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+    .nav-chips {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px 10px;
+      flex: 1;
+      min-width: 0;
+    }
+    .nav-chip {
+      font-size: 12px;
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .nav-chip-sep {
+      color: rgba(238, 247, 240, 0.28);
+      font-weight: 500;
+      user-select: none;
     }
     .nav-right {
       display: flex;
       align-items: center;
       gap: 10px;
+      flex-shrink: 0;
     }
     .pill {
       display: inline-flex;
@@ -525,7 +564,8 @@
     }
     .pricing-card::after,
     .features-card::after,
-    .links-card::after {
+    .links-card::after,
+    .nav::after {
       content: "";
       position: absolute;
       inset: -1px;
@@ -541,7 +581,8 @@
     }
     .pricing-card > *,
     .features-card > *,
-    .links-card > * {
+    .links-card > *,
+    .nav > * {
       position: relative;
       z-index: 1;
     }
@@ -847,6 +888,14 @@
       .col-4, .col-6 { grid-column: span 12; }
       .stats { grid-template-columns: 1fr; }
       .hero { padding: 26px 16px; }
+      .nav {
+        padding: 14px 16px 14px 20px;
+      }
+      .nav-chips {
+        order: 3;
+        width: 100%;
+        justify-content: flex-start;
+      }
     }
   </style>
 </head>
@@ -855,11 +904,17 @@
     <div id="webgl" aria-hidden="true"><canvas id="bg"></canvas></div>
     <header class="nav">
       <div class="brand">
-        <span class="brand-dot"></span>
-        <span>Antagonist >.<</span>
+        <span class="brand-dot" aria-hidden="true"></span>
+        <span class="gradient-text-mint nav-brand-name">Antagonist.Lua</span>
+      </div>
+      <div class="nav-chips" aria-label="Product highlights">
+        <span class="gradient-text-mint nav-chip">Fast</span>
+        <span class="nav-chip-sep" aria-hidden="true">·</span>
+        <span class="gradient-text-mint nav-chip">Updated</span>
+        <span class="nav-chip-sep" aria-hidden="true">·</span>
+        <span class="gradient-text-mint nav-chip">Cloud</span>
       </div>
       <div class="nav-right">
-        <span class="pill"><span class="pill-dot"></span> Cloud-ready</span>
         <a class="btn ghost" href="/cloud">Cloud</a>
       </div>
     </header>
