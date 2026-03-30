@@ -342,6 +342,7 @@
       flex-direction: column;
       gap: 2px;
       min-width: 0;
+      justify-content: center;
     }
     .link-title {
       font-weight: 720;
@@ -466,6 +467,7 @@
       position: relative;
       color: rgba(238, 247, 240, 0.90);
       font-size: 13px;
+      line-height: 1.35;
     }
     ul.features li::before {
       content: "";
@@ -475,7 +477,8 @@
       background: rgba(165, 207, 170, 0.85);
       position: absolute;
       left: 0;
-      top: 8px;
+      top: 0.68em;
+      transform: translateY(-50%);
       box-shadow: 0 0 16px rgba(165, 207, 170, 0.22);
     }
     label { display: block; margin: 10px 0 6px; color: #b7c5df; font-size: 12px; }
@@ -559,7 +562,7 @@
         <span>Antagonist >.<</span>
       </div>
       <div class="nav-right">
-        <span class="pill"><span class="pill-dot"></span> /home</span>
+        <span class="pill"><span class="pill-dot"></span> Cloud-ready</span>
         <a class="btn ghost" href="/cloud">Cloud</a>
       </div>
     </header>
@@ -567,6 +570,7 @@
     <section class="hero">
       <div class="hero-top reveal d1">
         <span class="badge"><i></i> Premium lua</span>
+        <a class="btn primary" href="/cloud">Open cloud</a>
       </div>
       <h1 class="reveal d2">Antagonist.Lua</h1>
       <p class="reveal d3">
@@ -605,6 +609,7 @@
         </div>
         <div class="row" style="margin-top:12px">
           <a class="link" href="https://discord.gg/9FbB4nX4Km" target="_blank" rel="noreferrer">Buy on Discord</a>
+          <a class="link" href="/cloud">Try Cloud</a>
         </div>
       </article>
 
