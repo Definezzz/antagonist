@@ -575,14 +575,38 @@
       justify-content: center;
     }
     .links-card .link-row {
-      width: min(100%, 560px);
-      margin-left: auto;
-      margin-right: auto;
-      justify-content: space-between;
+      width: 100%;
+      min-height: 78px;
+      justify-content: center;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(10, 15, 11, 0.82), rgba(6, 9, 7, 0.72));
+      box-shadow: none;
     }
     .links-card .link-left {
-      align-items: flex-start;
-      text-align: left;
+      align-items: center;
+      text-align: center;
+      gap: 4px;
+    }
+    .links-card .link-right {
+      display: none;
+    }
+    .links-card .row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      width: 100%;
+    }
+    .links-card .link-row:hover {
+      transform: translateY(-1px);
+      border-color: rgba(165, 207, 170, 0.30);
+      background: linear-gradient(180deg, rgba(12, 19, 14, 0.88), rgba(7, 11, 8, 0.78));
+      filter: none;
+    }
+    @media (max-width: 920px) {
+      .links-card .row {
+        grid-template-columns: 1fr;
+      }
     }
     @media (max-width: 920px) {
       .col-4, .col-6 { grid-column: span 12; }
@@ -660,21 +684,18 @@
               <span class="link-title">Discord</span>
               <span class="link-sub">Support • changelog • purchase • announcements</span>
             </span>
-            <span class="link-right">Open <span class="chev" aria-hidden="true"></span></span>
           </a>
           <a class="link-row" href="https://www.youtube.com/" target="_blank" rel="noreferrer">
             <span class="link-left">
               <span class="link-title">YouTube</span>
               <span class="link-sub">Videos • updates • previews</span>
             </span>
-            <span class="link-right">Open <span class="chev" aria-hidden="true"></span></span>
           </a>
           <a class="link-row" href="https://t.me/" target="_blank" rel="noreferrer">
             <span class="link-left">
               <span class="link-title">Telegram</span>
               <span class="link-sub">Announcements • community • quick news</span>
             </span>
-            <span class="link-right">Open <span class="chev" aria-hidden="true"></span></span>
           </a>
         </div>
       </article>
