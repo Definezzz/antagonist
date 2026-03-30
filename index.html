@@ -505,7 +505,9 @@
     .price .amt { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
     .price .per { color: var(--muted); font-size: 12px; }
 
-    .pricing-card {
+    .pricing-card,
+    .features-card,
+    .links-card {
       position: relative;
       text-align: center;
       border-radius: 22px;
@@ -520,7 +522,9 @@
         0 0 0 1px rgba(165, 207, 170, 0.06) inset,
         0 1px 0 rgba(255, 255, 255, 0.06) inset;
     }
-    .pricing-card::after {
+    .pricing-card::after,
+    .features-card::after,
+    .links-card::after {
       content: "";
       position: absolute;
       inset: -1px;
@@ -534,7 +538,15 @@
       pointer-events: none;
       opacity: 0.55;
     }
-    .pricing-card h2::after {
+    .pricing-card > *,
+    .features-card > *,
+    .links-card > * {
+      position: relative;
+      z-index: 1;
+    }
+    .pricing-card h2::after,
+    .features-card h2::after,
+    .links-card h2::after {
       margin-top: 8px;
     }
     .pricing-pill {
@@ -663,7 +675,7 @@
       display: inline-block;
       text-align: left;
     }
-    ul.features li {
+    .features-card ul.features li {
       margin: 7px 0;
       padding: 12px 14px 12px 12px;
       display: flex;
@@ -675,17 +687,20 @@
       font-size: 13px;
       line-height: 1.45;
       text-align: left;
-      border: 1px solid rgba(165, 207, 170, 0.14);
-      border-radius: 12px;
-      background: rgba(6, 10, 8, 0.45);
+      border: 1px solid rgba(165, 207, 170, 0.24);
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(12, 18, 14, 0.72), rgba(6, 10, 8, 0.82));
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.04);
       font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-      transition: border-color 0.2s ease, background 0.2s ease;
+      transition: border-color 0.2s ease, background 0.2s ease, transform 0.18s ease, box-shadow 0.2s ease;
     }
-    ul.features li:hover {
-      border-color: rgba(165, 207, 170, 0.26);
-      background: rgba(8, 13, 10, 0.58);
+    .features-card ul.features li:hover {
+      border-color: rgba(165, 207, 170, 0.38);
+      background: linear-gradient(180deg, rgba(14, 22, 16, 0.82), rgba(7, 11, 8, 0.9));
+      transform: translateY(-1px);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.06);
     }
-    ul.features li::before {
+    .features-card ul.features li::before {
       content: "";
       width: 6px;
       height: 6px;
@@ -776,10 +791,10 @@
       width: 100%;
       min-height: 78px;
       justify-content: center;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: linear-gradient(180deg, rgba(10, 15, 11, 0.82), rgba(6, 9, 7, 0.72));
-      box-shadow: none;
+      border: 1px solid rgba(165, 207, 170, 0.24);
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(12, 18, 14, 0.72), rgba(6, 10, 8, 0.82));
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.04);
     }
     .links-card .link-left {
       align-items: center;
@@ -796,9 +811,10 @@
       width: 100%;
     }
     .links-card .link-row:hover {
-      transform: translateY(-1px);
-      border-color: rgba(165, 207, 170, 0.30);
-      background: linear-gradient(180deg, rgba(12, 19, 14, 0.88), rgba(7, 11, 8, 0.78));
+      transform: translateY(-2px);
+      border-color: rgba(165, 207, 170, 0.4);
+      background: linear-gradient(180deg, rgba(14, 22, 16, 0.85), rgba(7, 11, 8, 0.92));
+      box-shadow: 0 14px 44px rgba(0, 0, 0, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.06);
       filter: none;
     }
     @media (max-width: 920px) {
@@ -830,7 +846,6 @@
     <section class="hero">
       <div class="hero-top reveal d1">
         <span class="badge"><i></i> Premium lua</span>
-        <a class="btn primary" href="/cloud">Open cloud</a>
       </div>
       <h1 class="reveal d2">Antagonist.Lua</h1>
       <p class="reveal d3">
@@ -876,7 +891,6 @@
         <p class="pricing-whisper">Cloud sync · updates · Discord support</p>
         <div class="pricing-actions reveal d4">
           <a class="pricing-btn pricing-btn-primary" href="https://discord.gg/9FbB4nX4Km" target="_blank" rel="noreferrer">Buy on Discord</a>
-          <a class="pricing-btn pricing-btn-soft" href="/cloud">Try Cloud</a>
         </div>
       </article>
 
