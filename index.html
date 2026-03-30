@@ -182,26 +182,6 @@
       line-height: 1.2;
       white-space: nowrap;
     }
-    .nav-chips {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 6px 10px;
-      flex: 1;
-      min-width: 0;
-    }
-    .nav-chip {
-      font-size: 12px;
-      font-weight: 750;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-    .nav-chip-sep {
-      color: rgba(238, 247, 240, 0.28);
-      font-weight: 500;
-      user-select: none;
-    }
     .nav-right {
       display: flex;
       align-items: center;
@@ -331,7 +311,7 @@
       box-shadow: 0 14px 36px rgba(0, 0, 0, 0.35);
     }
     .stat { transition-timing-function: cubic-bezier(.2,.8,.2,1); }
-    .stat .k { color: rgba(238, 247, 240, 0.92); font-size: 18px; font-weight: 750; letter-spacing: -0.01em; }
+    .stat .k { font-size: 18px; font-weight: 750; letter-spacing: -0.01em; }
     .stat .v { color: rgba(238, 247, 240, 0.60); font-size: 12px; margin-top: 4px; }
     .grid {
       display: grid;
@@ -891,11 +871,6 @@
       .nav {
         padding: 14px 16px 14px 20px;
       }
-      .nav-chips {
-        order: 3;
-        width: 100%;
-        justify-content: flex-start;
-      }
     }
   </style>
 </head>
@@ -906,13 +881,6 @@
       <div class="brand">
         <span class="brand-dot" aria-hidden="true"></span>
         <span class="gradient-text-mint nav-brand-name">Antagonist.Lua</span>
-      </div>
-      <div class="nav-chips" aria-label="Product highlights">
-        <span class="gradient-text-mint nav-chip">Fast</span>
-        <span class="nav-chip-sep" aria-hidden="true">·</span>
-        <span class="gradient-text-mint nav-chip">Updated</span>
-        <span class="nav-chip-sep" aria-hidden="true">·</span>
-        <span class="gradient-text-mint nav-chip">Cloud</span>
       </div>
       <div class="nav-right">
         <a class="btn ghost" href="/cloud">Cloud</a>
@@ -933,9 +901,9 @@
         <a class="btn ghost" href="/cloud">Manage configs</a>
       </div>
       <div class="stats reveal d5">
-        <div class="stat"><div class="k">Fast</div><div class="v">Low overhead</div></div>
-        <div class="stat"><div class="k">Updated</div><div class="v">Frequent fixes</div></div>
-        <div class="stat"><div class="k">Cloud</div><div class="v">Profiles sync</div></div>
+        <div class="stat"><div class="k gradient-text-mint">Fast</div><div class="v">Low overhead</div></div>
+        <div class="stat"><div class="k gradient-text-mint">Updated</div><div class="v">Frequent fixes</div></div>
+        <div class="stat"><div class="k gradient-text-mint">Cloud</div><div class="v">Profiles sync</div></div>
       </div>
     </section>
 
