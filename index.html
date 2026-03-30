@@ -23,6 +23,7 @@
       --gold-soft: rgba(214, 190, 125, 0.18);
       --soft-mint: rgba(165, 207, 170, 0.14);
       --card-inner: rgba(12, 18, 14, 0.55);
+      --text-gradient-mint: linear-gradient(165deg, #f4fff6 0%, #a5cfaa 38%, #5fb878 72%, #3dc3cf 100%);
     }
     * { box-sizing: border-box; }
     html, body {
@@ -595,11 +596,32 @@
       font-size: clamp(44px, 8vw, 56px);
       font-weight: 820;
       letter-spacing: -0.04em;
-      background: linear-gradient(165deg, #f4fff6 0%, #a5cfaa 38%, #5fb878 72%, #3dc3cf 100%);
+      background: var(--text-gradient-mint);
       -webkit-background-clip: text;
       background-clip: text;
+      -webkit-text-fill-color: transparent;
       color: transparent;
       filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.35));
+    }
+
+    /* Same mint gradient as price "9", for feature lines + link button titles only */
+    .gradient-text-mint {
+      background: var(--text-gradient-mint);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+    }
+    .features-card ul.features li .feature-line {
+      font-weight: 650;
+      letter-spacing: 0.01em;
+    }
+    .links-card .link-title {
+      background: var(--text-gradient-mint);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
     }
     .price-cute-main .dec {
       font-size: 26px;
@@ -683,7 +705,6 @@
       justify-content: flex-start;
       gap: 12px;
       position: relative;
-      color: rgba(238, 247, 240, 0.90);
       font-size: 13px;
       line-height: 1.45;
       text-align: left;
@@ -868,11 +889,11 @@
         <h2>Features</h2>
         <p class="hint">A quick overview.</p>
         <ul class="features">
-          <li>Anti-aim builder with per-state configuration and defensive</li>
-          <li>Cloud configs / Local configs</li>
-          <li>Visuality functional such as indicators etc.</li>
-          <li>Aimbot helpers such as prediction, jitter resolver, revolver helper and etc.</li>
-          <li>Utility functional such as autobuy, trashtalk, fps optimizer etc.</li>
+          <li><span class="gradient-text-mint feature-line">Anti-aim builder with per-state configuration and defensive</span></li>
+          <li><span class="gradient-text-mint feature-line">Cloud configs / Local configs</span></li>
+          <li><span class="gradient-text-mint feature-line">Visuality functional such as indicators etc.</span></li>
+          <li><span class="gradient-text-mint feature-line">Aimbot helpers such as prediction, jitter resolver, revolver helper and etc.</span></li>
+          <li><span class="gradient-text-mint feature-line">Utility functional such as autobuy, trashtalk, fps optimizer etc.</span></li>
         </ul>
       </article>
 
