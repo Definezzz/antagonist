@@ -213,17 +213,21 @@
       letter-spacing: -0.02em;
       text-wrap: balance;
       text-shadow: 0 8px 40px rgba(0, 0, 0, 0.45);
+      text-align: center;
     }
     .hero p {
       margin: 0;
       max-width: 720px;
       color: var(--muted);
       font-size: 15px;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
     }
     .hero-top {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
       gap: 14px;
       margin-bottom: 14px;
     }
@@ -263,6 +267,7 @@
       gap: 12px;
       margin-top: 18px;
     }
+    .stats .stat { text-align: center; }
     .stat {
       border: 1px solid var(--border);
       border-radius: 14px;
@@ -447,6 +452,7 @@
       flex-wrap: wrap;
       gap: 10px;
       margin-top: 16px;
+      justify-content: center;
     }
 
     .price {
@@ -462,6 +468,9 @@
       margin: 10px 0 0;
       padding: 0;
       list-style: none;
+      max-width: 680px;
+      margin-left: auto;
+      margin-right: auto;
     }
     ul.features li {
       margin: 7px 0;
@@ -549,6 +558,22 @@
     .msg { margin-top: 10px; min-height: 19px; font-size: 12px; color: var(--muted); }
     .msg.ok { color: var(--success); }
     .msg.err { color: var(--danger); }
+
+    .features-card,
+    .pricing-card,
+    .links-card {
+      text-align: center;
+    }
+    .pricing-card .price,
+    .pricing-card .row,
+    .links-card .row {
+      justify-content: center;
+    }
+    .links-card .link-row {
+      width: min(100%, 560px);
+      margin-left: auto;
+      margin-right: auto;
+    }
     @media (max-width: 920px) {
       .col-4, .col-6 { grid-column: span 12; }
       .stats { grid-template-columns: 1fr; }
@@ -592,7 +617,7 @@
     </section>
 
     <section class="grid">
-      <article class="card col-6">
+      <article class="card col-6 features-card">
         <h2>Features</h2>
         <p class="hint">A quick overview.</p>
         <ul class="features">
@@ -604,7 +629,7 @@
         </ul>
       </article>
 
-      <article class="card col-6">
+      <article class="card col-6 pricing-card">
         <h2>Pricing</h2>
         <div class="price">
           <div class="amt">$9.99</div>
@@ -616,7 +641,7 @@
         </div>
       </article>
 
-      <article class="card col-12">
+      <article class="card col-12 links-card">
         <h2>Links</h2>
         <p class="hint">Discord is the main funnel: support, changelog, purchase, announcements.</p>
         <div class="row" style="gap:12px">
