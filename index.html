@@ -479,11 +479,15 @@
     }
     ul.features li {
       margin: 7px 0;
-      padding-left: 16px;
+      padding: 12px 14px 12px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 12px;
       position: relative;
       color: rgba(238, 247, 240, 0.90);
       font-size: 13px;
-      line-height: 1.35;
+      line-height: 1.45;
       text-align: left;
     }
     ul.features li::before {
@@ -492,10 +496,9 @@
       height: 6px;
       border-radius: 99px;
       background: rgba(165, 207, 170, 0.85);
-      position: absolute;
-      left: 0;
-      top: 0.7em;
-      transform: translateY(-50%);
+      flex: 0 0 auto;
+      align-self: center;
+      position: static;
       box-shadow: 0 0 16px rgba(165, 207, 170, 0.22);
     }
     label { display: block; margin: 10px 0 6px; color: #b7c5df; font-size: 12px; }
