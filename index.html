@@ -21,6 +21,8 @@
       --radius: 16px;
       --ring: rgba(165, 207, 170, 0.18);
       --gold-soft: rgba(214, 190, 125, 0.18);
+      --soft-mint: rgba(165, 207, 170, 0.14);
+      --card-inner: rgba(12, 18, 14, 0.55);
     }
     * { box-sizing: border-box; }
     html, body {
@@ -122,7 +124,7 @@
       z-index: 1;
       max-width: 1120px;
       margin: 0 auto;
-      padding: 30px 18px 54px;
+      padding: 34px 20px 72px;
     }
     .container::before {
       content: "";
@@ -140,7 +142,11 @@
       align-items: center;
       justify-content: space-between;
       gap: 14px;
-      margin-bottom: 26px;
+      margin-bottom: 28px;
+      padding: 10px 4px;
+      border-radius: 14px;
+      border: 1px solid rgba(165, 207, 170, 0.08);
+      background: rgba(5, 8, 6, 0.35);
     }
     .brand {
       display: flex;
@@ -190,8 +196,8 @@
         radial-gradient(900px 460px at 110% 0%, rgba(61, 195, 207, 0.12), transparent 55%),
         linear-gradient(180deg, rgba(10, 16, 12, 0.92) 0%, rgba(6, 9, 7, 0.88) 100%);
       box-shadow: 0 28px 90px rgba(0, 0, 0, 0.58), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-      padding: 34px 28px;
-      margin-bottom: 16px;
+      padding: 36px 32px 38px;
+      margin-bottom: 22px;
       overflow: hidden;
       position: relative;
     }
@@ -273,9 +279,9 @@
     .stats .stat { text-align: center; }
     .stat {
       border: 1px solid var(--border);
-      border-radius: 14px;
+      border-radius: 16px;
       background: linear-gradient(180deg, rgba(10, 15, 11, 0.82), rgba(6, 9, 7, 0.72));
-      padding: 14px;
+      padding: 16px 14px;
       transition: transform 0.18s ease, border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
     }
     .stat:hover {
@@ -290,7 +296,7 @@
     .grid {
       display: grid;
       grid-template-columns: repeat(12, minmax(0, 1fr));
-      gap: 12px;
+      gap: 16px;
     }
     .card {
       border: 1px solid var(--border);
@@ -303,8 +309,40 @@
       transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
     }
     .card:hover { transform: translateY(-2px); border-color: rgba(165, 207, 170, 0.34); box-shadow: 0 32px 84px rgba(0, 0, 0, 0.56), inset 0 1px 0 rgba(255, 255, 255, 0.07); }
-    .card h2 { margin: 0 0 10px; font-size: 16px; font-weight: 700; letter-spacing: 0.01em; }
-    .card p.hint { margin: 0 0 10px; color: rgba(238, 247, 240, 0.58); font-size: 12px; }
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 17px;
+      font-weight: 780;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      position: relative;
+      width: fit-content;
+    }
+    .features-card h2,
+    .pricing-card h2,
+    .links-card h2 {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .card h2::after {
+      content: "";
+      display: block;
+      width: 42px;
+      height: 3px;
+      margin: 10px auto 0;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      opacity: 0.85;
+    }
+    .card p.hint {
+      margin: 4px 0 14px;
+      color: rgba(238, 247, 240, 0.52);
+      font-size: 13px;
+      line-height: 1.5;
+      max-width: 42ch;
+      margin-left: auto;
+      margin-right: auto;
+    }
     .col-4 { grid-column: span 4; }
     .col-6 { grid-column: span 6; }
     .col-12 { grid-column: span 12; }
@@ -467,6 +505,154 @@
     .price .amt { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
     .price .per { color: var(--muted); font-size: 12px; }
 
+    .pricing-card {
+      position: relative;
+      text-align: center;
+      border-radius: 22px;
+      padding: 26px 22px 24px;
+      border-color: rgba(165, 207, 170, 0.28);
+      background:
+        radial-gradient(400px 200px at 50% -20%, rgba(165, 207, 170, 0.22), transparent 55%),
+        radial-gradient(280px 140px at 100% 100%, rgba(61, 195, 207, 0.12), transparent 60%),
+        linear-gradient(175deg, rgba(14, 22, 16, 0.92), rgba(6, 10, 7, 0.88));
+      box-shadow:
+        0 28px 80px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(165, 207, 170, 0.06) inset,
+        0 1px 0 rgba(255, 255, 255, 0.06) inset;
+    }
+    .pricing-card::after {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(145deg, rgba(165, 207, 170, 0.45), rgba(61, 195, 207, 0.18), transparent 50%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0.55;
+    }
+    .pricing-card h2::after {
+      margin-top: 8px;
+    }
+    .pricing-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0 auto 16px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 650;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(238, 247, 240, 0.88);
+      border: 1px solid rgba(165, 207, 170, 0.35);
+      background: linear-gradient(180deg, rgba(165, 207, 170, 0.18), rgba(61, 195, 207, 0.08));
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+    .pricing-pill span.spark {
+      font-size: 12px;
+      line-height: 1;
+      opacity: 0.95;
+      filter: drop-shadow(0 0 8px rgba(165, 207, 170, 0.5));
+    }
+    .price-cute {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      margin: 6px 0 14px;
+    }
+    .price-cute-main {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 2px;
+      line-height: 0.9;
+    }
+    .price-cute-main .cur {
+      font-size: 22px;
+      font-weight: 750;
+      margin-top: 0.35em;
+      color: rgba(238, 247, 240, 0.75);
+    }
+    .price-cute-main .num {
+      font-size: clamp(44px, 8vw, 56px);
+      font-weight: 820;
+      letter-spacing: -0.04em;
+      background: linear-gradient(165deg, #f4fff6 0%, #a5cfaa 38%, #5fb878 72%, #3dc3cf 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.35));
+    }
+    .price-cute-main .dec {
+      font-size: 26px;
+      font-weight: 780;
+      margin-top: 0.5em;
+      letter-spacing: -0.02em;
+      background: linear-gradient(180deg, rgba(238, 247, 240, 0.92), rgba(165, 207, 170, 0.75));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .price-cute-period {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(238, 247, 240, 0.52);
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
+    }
+    .pricing-whisper {
+      margin: 0 0 18px;
+      font-size: 12px;
+      color: rgba(238, 247, 240, 0.48);
+      line-height: 1.45;
+      max-width: 28em;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .pricing-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+    }
+    .pricing-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 20px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 680;
+      letter-spacing: 0.02em;
+      border: 1px solid rgba(165, 207, 170, 0.28);
+      background: rgba(8, 12, 10, 0.5);
+      color: rgba(238, 247, 240, 0.92);
+      transition: transform 0.16s ease, border-color 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    }
+    .pricing-btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(165, 207, 170, 0.55);
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.32);
+      filter: brightness(1.06);
+    }
+    .pricing-btn-primary {
+      border-color: rgba(165, 207, 170, 0.55);
+      background: linear-gradient(175deg, rgba(120, 200, 140, 0.65), rgba(40, 110, 72, 0.75));
+      box-shadow: 0 16px 40px rgba(95, 170, 112, 0.22);
+    }
+    .pricing-btn-soft {
+      border-color: rgba(61, 195, 207, 0.28);
+      background: rgba(8, 14, 12, 0.45);
+    }
+
     ul.features {
       margin: 10px 0 0;
       padding: 0;
@@ -489,6 +675,15 @@
       font-size: 13px;
       line-height: 1.45;
       text-align: left;
+      border: 1px solid rgba(165, 207, 170, 0.14);
+      border-radius: 12px;
+      background: rgba(6, 10, 8, 0.45);
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+    ul.features li:hover {
+      border-color: rgba(165, 207, 170, 0.26);
+      background: rgba(8, 13, 10, 0.58);
     }
     ul.features li::before {
       content: "";
@@ -668,13 +863,20 @@
 
       <article class="card col-6 pricing-card">
         <h2>Pricing</h2>
-        <div class="price">
-          <div class="amt">$9.99</div>
-          <div class="per">/ month</div>
+        <p class="hint">One plan — everything included.</p>
+        <div class="pricing-pill reveal d2"><span class="spark" aria-hidden="true">✦</span> Popular monthly</div>
+        <div class="price-cute reveal d3">
+          <div class="price-cute-main">
+            <span class="cur">$</span>
+            <span class="num">9</span>
+            <span class="dec">.99</span>
+          </div>
+          <span class="price-cute-period">per month</span>
         </div>
-        <div class="row" style="margin-top:12px">
-          <a class="link" href="https://discord.gg/9FbB4nX4Km" target="_blank" rel="noreferrer">Buy on Discord</a>
-          <a class="link" href="/cloud">Try Cloud</a>
+        <p class="pricing-whisper">Cloud sync · updates · Discord support</p>
+        <div class="pricing-actions reveal d4">
+          <a class="pricing-btn pricing-btn-primary" href="https://discord.gg/9FbB4nX4Km" target="_blank" rel="noreferrer">Buy on Discord</a>
+          <a class="pricing-btn pricing-btn-soft" href="/cloud">Try Cloud</a>
         </div>
       </article>
 
