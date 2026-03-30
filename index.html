@@ -266,6 +266,9 @@
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
       margin-top: 18px;
+      max-width: 940px;
+      margin-left: auto;
+      margin-right: auto;
     }
     .stats .stat { text-align: center; }
     .stat {
@@ -468,18 +471,20 @@
       margin: 10px 0 0;
       padding: 0;
       list-style: none;
-      max-width: 680px;
+      max-width: 760px;
       margin-left: auto;
       margin-right: auto;
+      display: inline-block;
+      text-align: left;
     }
     ul.features li {
       margin: 7px 0;
-      padding-left: 14px;
+      padding-left: 16px;
       position: relative;
       color: rgba(238, 247, 240, 0.90);
       font-size: 13px;
       line-height: 1.35;
-      text-align: center;
+      text-align: left;
     }
     ul.features li::before {
       content: "";
@@ -489,7 +494,7 @@
       background: rgba(165, 207, 170, 0.85);
       position: absolute;
       left: 0;
-      top: 0.68em;
+      top: 0.7em;
       transform: translateY(-50%);
       box-shadow: 0 0 16px rgba(165, 207, 170, 0.22);
     }
