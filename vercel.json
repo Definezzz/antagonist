@@ -3,6 +3,10 @@
     "api/configs.js": {
       "memory": 128,
       "maxDuration": 10
+    },
+    "api/license.js": {
+      "memory": 128,
+      "maxDuration": 10
     }
   }
 }
