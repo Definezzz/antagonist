@@ -24,6 +24,9 @@
       --soft-mint: rgba(165, 207, 170, 0.14);
       --card-inner: rgba(12, 18, 14, 0.55);
       --text-gradient-mint: linear-gradient(165deg, #f4fff6 0%, #a5cfaa 38%, #5fb878 72%, #3dc3cf 100%);
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
     }
     * { box-sizing: border-box; }
     html, body {
@@ -47,6 +50,7 @@
       background:
         radial-gradient(1200px 300px at 50% 0%, var(--gold-soft), transparent 70%),
         linear-gradient(120deg, rgba(255,255,255,0.03), transparent 28%, transparent 72%, rgba(255,255,255,0.02));
+      animation: auroraDrift 22s ease-in-out infinite;
     }
     a { color: inherit; text-decoration: none; }
     ::selection { background: rgba(165, 207, 170, 0.28); }
@@ -88,22 +92,80 @@
     a, button, .btn, .link-row { cursor: var(--cursor-pointer) 16 16, pointer; }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(18px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeScale {
+      from { opacity: 0; transform: scale(0.94) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    @keyframes auroraDrift {
+      0%, 100% { opacity: 0.26; transform: scale(1) translate(0, 0); }
+      33% { opacity: 0.34; transform: scale(1.03) translate(1.5%, 0.5%); }
+      66% { opacity: 0.3; transform: scale(1.02) translate(-1%, 1.2%); }
+    }
+    @keyframes shellEnter {
+      from { opacity: 0; transform: translateY(28px) scale(0.965); filter: blur(12px); }
+      to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 16px rgba(165, 207, 170, 0.5); transform: scale(1); }
+      50% { box-shadow: 0 0 32px rgba(165, 207, 170, 0.85), 0 0 48px rgba(61, 195, 207, 0.25); transform: scale(1.08); }
+    }
+    @keyframes slideInSidebar {
+      from { opacity: 0; transform: translateX(-16px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes headSwap {
+      from { opacity: 0; transform: translateY(-12px); filter: blur(8px); }
+      to { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+    @keyframes panelContentIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes subPanelSwap {
+      from { opacity: 0; transform: translateX(12px) scale(0.98); }
+      to { opacity: 1; transform: translateX(0) scale(1); }
+    }
+    @keyframes ioRise {
+      from { opacity: 0; transform: translateY(22px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes chevNudge {
+      0%, 100% { transform: translateX(0) rotate(45deg); }
+      50% { transform: translateX(3px) rotate(45deg); }
+    }
+    @keyframes shimmerLine {
+      0% { transform: translateX(-100%); opacity: 0; }
+      20% { opacity: 0.4; }
+      100% { transform: translateX(200%); opacity: 0; }
     }
     .reveal {
       opacity: 0;
-      animation: fadeUp 0.70s cubic-bezier(.2,.8,.2,1) both;
+      animation: fadeUp 0.85s var(--ease-out-expo) both;
       will-change: transform, opacity;
     }
-    .d1 { animation-delay: 0.05s; }
-    .d2 { animation-delay: 0.12s; }
-    .d3 { animation-delay: 0.19s; }
-    .d4 { animation-delay: 0.26s; }
-    .d5 { animation-delay: 0.33s; }
-    .d6 { animation-delay: 0.40s; }
+    .d1 { animation-delay: 0.06s; }
+    .d2 { animation-delay: 0.14s; }
+    .d3 { animation-delay: 0.22s; }
+    .d4 { animation-delay: 0.30s; }
+    .d5 { animation-delay: 0.38s; }
+    .d6 { animation-delay: 0.46s; }
     @media (prefers-reduced-motion: reduce) {
       .reveal { opacity: 1; animation: none; }
+      body::before { animation: none !important; }
+      .app-shell { animation: none !important; }
+      .sidebar-brand .brand-dot { animation: none !important; }
+      .sidebar-ready .sidebar-tab { animation: none !important; }
+      .io-rise.is-inview { animation: none !important; opacity: 1 !important; transform: none !important; }
+      .app-main-head.is-animating .app-kicker,
+      .app-main-head.is-animating .app-page-title,
+      .app-main-head.is-animating .app-page-desc { animation: none !important; }
+      .product-subpanel:not([hidden]) { animation: none !important; }
+      .app-shell::after { animation: none !important; opacity: 0.35 !important; }
+      .pricing-pill span.spark { animation: none !important; }
+      .link-row:hover .chev { animation: none !important; }
     }
 
     #webgl {
@@ -120,6 +182,401 @@
       height: 100%;
       display: block;
     }
+
+    .app-shell {
+      display: flex;
+      align-items: stretch;
+      min-height: calc(100vh - clamp(24px, 4vw, 44px));
+      width: calc(100% - clamp(24px, 4vw, 48px));
+      max-width: min(1480px, 100%);
+      margin: clamp(12px, 2.5vw, 22px) auto clamp(16px, 3vw, 28px);
+      position: relative;
+      z-index: 1;
+      box-sizing: border-box;
+      border-radius: clamp(18px, 2.5vw, 26px);
+      border: 1px solid rgba(165, 207, 170, 0.14);
+      background: linear-gradient(
+        165deg,
+        rgba(12, 18, 14, 0.55) 0%,
+        rgba(6, 10, 8, 0.42) 50%,
+        rgba(5, 8, 6, 0.5) 100%
+      );
+      overflow: hidden;
+      box-shadow:
+        0 28px 90px rgba(0, 0, 0, 0.42),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      animation: shellEnter 1.05s var(--ease-out-expo) both;
+    }
+    .app-shell::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.55;
+      background: linear-gradient(
+        118deg,
+        transparent 0%,
+        rgba(165, 207, 170, 0.04) 42%,
+        rgba(61, 195, 207, 0.06) 50%,
+        transparent 58%
+      );
+      background-size: 240% 100%;
+      animation: sheenPass 16s ease-in-out infinite;
+    }
+    @keyframes sheenPass {
+      0%, 100% { background-position: 120% 0; }
+      50% { background-position: -20% 0; }
+    }
+    .app-sidebar {
+      width: min(272px, 32vw);
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 24px 18px 28px;
+      position: relative;
+      z-index: 2;
+      background: linear-gradient(
+        180deg,
+        rgba(10, 16, 12, 0.65) 0%,
+        rgba(5, 8, 6, 0.4) 100%
+      );
+    }
+    .app-sidebar::after {
+      content: "";
+      position: absolute;
+      top: 12%;
+      bottom: 12%;
+      right: 0;
+      width: 1px;
+      background: linear-gradient(
+        180deg,
+        transparent,
+        rgba(165, 207, 170, 0.22) 20%,
+        rgba(165, 207, 170, 0.14) 50%,
+        rgba(61, 195, 207, 0.1) 80%,
+        transparent
+      );
+      pointer-events: none;
+    }
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 6px 8px 16px;
+      margin-bottom: 2px;
+      border-bottom: 1px solid rgba(165, 207, 170, 0.08);
+    }
+    .sidebar-brand .brand-dot {
+      flex-shrink: 0;
+      animation: pulseGlow 3.2s ease-in-out infinite;
+    }
+    .sidebar-ready .sidebar-tab:nth-child(1) { animation: slideInSidebar 0.55s var(--ease-out-expo) 0.08s both; }
+    .sidebar-ready .sidebar-tab:nth-child(2) { animation: slideInSidebar 0.55s var(--ease-out-expo) 0.14s both; }
+    .sidebar-ready .sidebar-tab:nth-child(3) { animation: slideInSidebar 0.55s var(--ease-out-expo) 0.2s both; }
+    .sidebar-ready .sidebar-tab:nth-child(4) { animation: slideInSidebar 0.55s var(--ease-out-expo) 0.26s both; }
+    .sidebar-ready .sidebar-cloud { animation: slideInSidebar 0.55s var(--ease-out-expo) 0.32s both; }
+    .sidebar-ready .sidebar-discord { animation: slideInSidebar 0.55s var(--ease-out-expo) 0.38s both; }
+    .sidebar-brand-name {
+      font-size: 15px;
+      font-weight: 780;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+    .sidebar-tagline {
+      font-size: 11px;
+      color: rgba(238, 247, 240, 0.42);
+      padding: 0 8px 16px;
+      line-height: 1.5;
+    }
+    .sidebar-tabs {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .sidebar-tab {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      text-align: left;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: rgba(238, 247, 240, 0.72);
+      font-size: 13px;
+      font-weight: 650;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      transition:
+        background 0.35s var(--ease-smooth),
+        border-color 0.35s var(--ease-smooth),
+        color 0.3s ease,
+        transform 0.35s var(--ease-spring),
+        box-shadow 0.4s ease;
+      font-family: inherit;
+    }
+    .sidebar-tab:hover {
+      background: rgba(165, 207, 170, 0.08);
+      color: rgba(238, 247, 240, 0.95);
+      transform: translateX(4px);
+    }
+    .sidebar-tab:active {
+      transform: translateX(2px) scale(0.98);
+    }
+    .sidebar-tab.is-active {
+      background: linear-gradient(135deg, rgba(165, 207, 170, 0.14) 0%, rgba(61, 195, 207, 0.06) 100%);
+      border-color: rgba(165, 207, 170, 0.28);
+      color: #eef7f0;
+      box-shadow:
+        0 0 0 1px rgba(165, 207, 170, 0.08) inset,
+        0 8px 28px rgba(0, 0, 0, 0.2);
+    }
+    .sidebar-tab.is-active:hover {
+      transform: translateX(3px);
+    }
+    .sidebar-spacer { flex: 1; min-height: 16px; }
+    .sidebar-cloud {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(165, 207, 170, 0.2);
+      background: rgba(8, 12, 10, 0.45);
+      color: rgba(238, 247, 240, 0.88);
+      font-size: 13px;
+      font-weight: 650;
+      transition:
+        border-color 0.35s ease,
+        filter 0.35s ease,
+        transform 0.35s var(--ease-spring),
+        box-shadow 0.4s ease;
+    }
+    .sidebar-cloud:hover {
+      border-color: rgba(165, 207, 170, 0.45);
+      filter: brightness(1.08);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+    }
+    .sidebar-discord {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 8px;
+      padding: 11px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 680;
+      transition: transform 0.35s var(--ease-spring), filter 0.3s ease, box-shadow 0.4s ease;
+    }
+    .sidebar-discord:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.06);
+      box-shadow: 0 14px 40px rgba(165, 207, 170, 0.2);
+    }
+    .app-main {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 2;
+      background: linear-gradient(
+        100deg,
+        rgba(6, 10, 8, 0.15) 0%,
+        rgba(8, 12, 10, 0.35) 40%,
+        rgba(5, 8, 6, 0.28) 100%
+      );
+    }
+    .app-main-head {
+      flex-shrink: 0;
+      padding: clamp(18px, 2.5vw, 26px) clamp(22px, 3vw, 36px) 18px;
+      border-bottom: none;
+      background: linear-gradient(180deg, rgba(10, 14, 11, 0.5) 0%, rgba(6, 9, 7, 0.15) 100%);
+      box-shadow: 0 1px 0 rgba(165, 207, 170, 0.07);
+      position: relative;
+      overflow: hidden;
+    }
+    .app-main-head::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 5%;
+      right: 5%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(165, 207, 170, 0.25), rgba(61, 195, 207, 0.15), transparent);
+      opacity: 0.7;
+    }
+    .app-main-head.is-animating .app-kicker {
+      animation: headSwap 0.5s var(--ease-out-expo) both;
+    }
+    .app-main-head.is-animating .app-page-title {
+      animation: headSwap 0.55s var(--ease-out-expo) 0.05s both;
+    }
+    .app-main-head.is-animating .app-page-desc {
+      animation: headSwap 0.55s var(--ease-out-expo) 0.1s both;
+    }
+    .app-kicker {
+      margin: 0 0 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(165, 207, 170, 0.55);
+    }
+    .app-page-title {
+      margin: 0 0 8px;
+      font-size: clamp(22px, 2.4vw, 30px);
+      font-weight: 780;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      background: var(--text-gradient-mint);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+    }
+    .app-page-desc {
+      margin: 0;
+      font-size: 14px;
+      color: rgba(238, 247, 240, 0.55);
+      max-width: 52ch;
+      line-height: 1.45;
+    }
+    .subtab-row {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      margin-top: 18px;
+      padding: 6px;
+      border-radius: 999px;
+      background: rgba(5, 8, 6, 0.45);
+      border: 1px solid rgba(165, 207, 170, 0.1);
+    }
+    .subtab-row.is-hidden {
+      display: none;
+    }
+    .subtab {
+      padding: 9px 18px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: rgba(238, 247, 240, 0.7);
+      font-size: 12px;
+      font-weight: 650;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: inherit;
+      transition:
+        background 0.4s var(--ease-smooth),
+        border-color 0.35s ease,
+        color 0.3s ease,
+        transform 0.35s var(--ease-spring),
+        box-shadow 0.35s ease;
+    }
+    .subtab:hover {
+      border-color: rgba(165, 207, 170, 0.35);
+      color: rgba(238, 247, 240, 0.95);
+      transform: translateY(-1px);
+    }
+    .subtab:active {
+      transform: translateY(0) scale(0.97);
+    }
+    .subtab.is-active {
+      border-color: rgba(165, 207, 170, 0.25);
+      background: linear-gradient(180deg, rgba(165, 207, 170, 0.16), rgba(61, 195, 207, 0.06));
+      color: #eef7f0;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+    }
+    .app-main-scroll {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-gutter: stable;
+    }
+    .container.app-inner {
+      position: relative;
+      isolation: isolate;
+      max-width: 100%;
+      width: 100%;
+      padding: clamp(20px, 3vw, 32px) clamp(20px, 3.5vw, 40px) clamp(40px, 5vw, 72px);
+      margin: 0;
+    }
+    .container.app-inner::before {
+      display: none;
+    }
+    .container.app-inner .hero {
+      margin-top: 0;
+      margin-bottom: 0;
+      box-shadow: 0 20px 56px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+    #panel-product .grid {
+      gap: 20px;
+    }
+    #panel-product .product-subpanel {
+      margin: 0;
+    }
+    .app-panel {
+      width: 100%;
+      transition:
+        opacity 0.5s var(--ease-smooth),
+        transform 0.65s var(--ease-out-expo),
+        filter 0.45s ease,
+        visibility 0s linear 0.5s;
+    }
+    .app-panel:not(.is-active) {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      opacity: 0;
+      transform: translateY(22px) scale(0.985);
+      filter: blur(4px);
+      visibility: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .app-panel.is-active {
+      position: relative;
+      opacity: 1;
+      transform: none;
+      filter: none;
+      visibility: visible;
+      pointer-events: auto;
+      z-index: 1;
+      transition:
+        opacity 0.55s var(--ease-smooth),
+        transform 0.7s var(--ease-out-expo),
+        filter 0.5s ease,
+        visibility 0s linear 0s;
+    }
+    .product-subpanel[hidden] {
+      display: none !important;
+    }
+    .product-subpanel:not([hidden]) {
+      animation: subPanelSwap 0.6s var(--ease-out-expo) both;
+    }
+    .io-rise {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    .io-rise.is-inview {
+      animation: ioRise 0.75s var(--ease-out-expo) both;
+      animation-delay: var(--io-delay, 0s);
+    }
+    .links-card .link-row.io-rise.is-inview {
+      animation: ioRise 0.65s var(--ease-out-expo) both;
+      animation-delay: var(--io-delay, 0s);
+    }
+
     .container {
       position: relative;
       z-index: 1;
@@ -220,6 +677,15 @@
       margin-bottom: 22px;
       overflow: hidden;
       position: relative;
+      transition:
+        transform 0.55s var(--ease-out-expo),
+        box-shadow 0.55s ease,
+        border-color 0.45s ease;
+    }
+    .hero:hover {
+      transform: translateY(-4px);
+      border-color: rgba(165, 207, 170, 0.32);
+      box-shadow: 0 40px 100px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(165, 207, 170, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.07);
     }
     .hero::after {
       content: "";
@@ -302,15 +768,18 @@
       border-radius: 16px;
       background: linear-gradient(180deg, rgba(10, 15, 11, 0.82), rgba(6, 9, 7, 0.72));
       padding: 16px 14px;
-      transition: transform 0.18s ease, border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
+      transition:
+        transform 0.45s var(--ease-spring),
+        border-color 0.4s ease,
+        background 0.45s ease,
+        box-shadow 0.45s ease;
     }
     .stat:hover {
-      transform: translateY(-1px);
-      border-color: rgba(165, 207, 170, 0.30);
-      background: linear-gradient(180deg, rgba(12, 19, 14, 0.88), rgba(7, 11, 8, 0.78));
-      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.35);
+      transform: translateY(-4px) scale(1.02);
+      border-color: rgba(165, 207, 170, 0.38);
+      background: linear-gradient(180deg, rgba(12, 19, 14, 0.9), rgba(7, 11, 8, 0.82));
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.4), 0 0 24px rgba(165, 207, 170, 0.08);
     }
-    .stat { transition-timing-function: cubic-bezier(.2,.8,.2,1); }
     .stat .k { font-size: 18px; font-weight: 750; letter-spacing: -0.01em; }
     .stat .v { color: rgba(238, 247, 240, 0.60); font-size: 12px; margin-top: 4px; }
     .grid {
@@ -326,9 +795,16 @@
       box-shadow: 0 26px 72px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
       padding: 18px 18px 16px;
       min-height: 150px;
-      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+      transition:
+        transform 0.5s var(--ease-out-expo),
+        border-color 0.4s ease,
+        box-shadow 0.5s ease;
     }
-    .card:hover { transform: translateY(-2px); border-color: rgba(165, 207, 170, 0.34); box-shadow: 0 32px 84px rgba(0, 0, 0, 0.56), inset 0 1px 0 rgba(255, 255, 255, 0.07); }
+    .card:hover {
+      transform: translateY(-5px) scale(1.008);
+      border-color: rgba(165, 207, 170, 0.42);
+      box-shadow: 0 40px 96px rgba(0, 0, 0, 0.58), 0 0 40px rgba(165, 207, 170, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
     .card h2 {
       margin: 0 0 10px;
       font-size: 17px;
@@ -446,8 +922,8 @@
       transition: transform 0.18s ease, border-color 0.18s ease;
     }
     .link-row:hover .chev {
-      transform: translateX(2px) rotate(45deg);
-      border-color: rgba(165, 207, 170, 0.72);
+      border-color: rgba(165, 207, 170, 0.85);
+      animation: chevNudge 1.1s ease-in-out infinite;
     }
 
     .btn {
@@ -464,7 +940,11 @@
       font-size: 13px;
       font-weight: 650;
       letter-spacing: 0.01em;
-      transition: transform 0.14s ease, border-color 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
+      transition:
+        transform 0.35s var(--ease-spring),
+        border-color 0.35s ease,
+        filter 0.35s ease,
+        box-shadow 0.4s ease;
       position: relative;
       overflow: hidden;
     }
@@ -480,8 +960,13 @@
       pointer-events: none;
     }
     .btn:hover::before { left: 130%; }
-    .btn:hover { border-color: rgba(165, 207, 170, 0.52); filter: brightness(1.08); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28); }
-    .btn:active { transform: translateY(1px); }
+    .btn:hover {
+      border-color: rgba(165, 207, 170, 0.55);
+      filter: brightness(1.1);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+      transform: translateY(-2px);
+    }
+    .btn:active { transform: translateY(0) scale(0.98); }
     .btn.primary {
       border-color: rgba(165, 207, 170, 0.65);
       background: linear-gradient(180deg, rgba(95, 170, 112, 0.58), rgba(30, 88, 56, 0.66));
@@ -586,12 +1071,19 @@
       border: 1px solid rgba(165, 207, 170, 0.35);
       background: linear-gradient(180deg, rgba(165, 207, 170, 0.18), rgba(61, 195, 207, 0.08));
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      transition: transform 0.4s var(--ease-spring), border-color 0.35s ease, box-shadow 0.4s ease;
     }
     .pricing-pill span.spark {
+      display: inline-block;
       font-size: 12px;
       line-height: 1;
       opacity: 0.95;
       filter: drop-shadow(0 0 8px rgba(165, 207, 170, 0.5));
+      animation: sparkle 3.5s ease-in-out infinite;
+    }
+    .pricing-card:hover .pricing-pill {
+      transform: scale(1.04);
+      border-color: rgba(165, 207, 170, 0.5);
     }
     .price-cute {
       display: flex;
@@ -625,7 +1117,6 @@
       filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.35));
     }
 
-    /* Same mint gradient as price "9", for feature lines + link button titles only */
     .gradient-text-mint {
       background: var(--text-gradient-mint);
       -webkit-background-clip: text;
@@ -690,13 +1181,20 @@
       border: 1px solid rgba(165, 207, 170, 0.28);
       background: rgba(8, 12, 10, 0.5);
       color: rgba(238, 247, 240, 0.92);
-      transition: transform 0.16s ease, border-color 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+      transition:
+        transform 0.4s var(--ease-spring),
+        border-color 0.35s ease,
+        box-shadow 0.45s ease,
+        filter 0.35s ease;
     }
     .pricing-btn:hover {
-      transform: translateY(-2px);
-      border-color: rgba(165, 207, 170, 0.55);
-      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.32);
-      filter: brightness(1.06);
+      transform: translateY(-4px) scale(1.03);
+      border-color: rgba(165, 207, 170, 0.65);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.38), 0 0 32px rgba(165, 207, 170, 0.12);
+      filter: brightness(1.08);
+    }
+    .pricing-btn:active {
+      transform: translateY(-1px) scale(1.01);
     }
     .pricing-btn-primary {
       border-color: rgba(165, 207, 170, 0.55);
@@ -734,13 +1232,17 @@
       background: linear-gradient(180deg, rgba(12, 18, 14, 0.72), rgba(6, 10, 8, 0.82));
       box-shadow: 0 10px 32px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.04);
       font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-      transition: border-color 0.2s ease, background 0.2s ease, transform 0.18s ease, box-shadow 0.2s ease;
+      transition:
+        border-color 0.45s ease,
+        background 0.45s ease,
+        transform 0.45s var(--ease-spring),
+        box-shadow 0.45s ease;
     }
     .features-card ul.features li:hover {
-      border-color: rgba(165, 207, 170, 0.38);
-      background: linear-gradient(180deg, rgba(14, 22, 16, 0.82), rgba(7, 11, 8, 0.9));
-      transform: translateY(-1px);
-      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      border-color: rgba(165, 207, 170, 0.45);
+      background: linear-gradient(180deg, rgba(14, 22, 16, 0.88), rgba(7, 11, 8, 0.94));
+      transform: translateY(-3px) scale(1.01);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.38), 0 0 28px rgba(165, 207, 170, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.07);
     }
     .features-card ul.features li::before {
       content: "";
@@ -752,6 +1254,11 @@
       align-self: center;
       position: static;
       box-shadow: 0 0 16px rgba(165, 207, 170, 0.22);
+      transition: transform 0.45s var(--ease-spring), box-shadow 0.4s ease;
+    }
+    .features-card ul.features li:hover::before {
+      transform: scale(1.45);
+      box-shadow: 0 0 24px rgba(165, 207, 170, 0.5);
     }
     label { display: block; margin: 10px 0 6px; color: #b7c5df; font-size: 12px; }
     input[type="text"], textarea {
@@ -837,6 +1344,11 @@
       border-radius: 16px;
       background: linear-gradient(180deg, rgba(12, 18, 14, 0.72), rgba(6, 10, 8, 0.82));
       box-shadow: 0 10px 32px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      transition:
+        transform 0.45s var(--ease-spring),
+        border-color 0.4s ease,
+        background 0.45s ease,
+        box-shadow 0.45s ease;
     }
     .links-card .link-left {
       align-items: center;
@@ -853,10 +1365,10 @@
       width: 100%;
     }
     .links-card .link-row:hover {
-      transform: translateY(-2px);
-      border-color: rgba(165, 207, 170, 0.4);
-      background: linear-gradient(180deg, rgba(14, 22, 16, 0.85), rgba(7, 11, 8, 0.92));
-      box-shadow: 0 14px 44px rgba(0, 0, 0, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      transform: translateY(-5px) scale(1.02);
+      border-color: rgba(165, 207, 170, 0.48);
+      background: linear-gradient(180deg, rgba(14, 22, 16, 0.9), rgba(7, 11, 8, 0.96));
+      box-shadow: 0 22px 56px rgba(0, 0, 0, 0.4), 0 0 28px rgba(165, 207, 170, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.07);
       filter: none;
     }
     @media (max-width: 920px) {
@@ -871,25 +1383,1045 @@
       .nav {
         padding: 14px 16px 14px 20px;
       }
+      .app-shell {
+        flex-direction: column;
+        width: calc(100% - 20px);
+        min-height: auto;
+        margin: 10px auto 16px;
+        border-radius: 20px;
+      }
+      .app-sidebar {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        padding: 14px 14px 12px;
+        border-right: none;
+        border-bottom: 1px solid rgba(165, 207, 170, 0.1);
+      }
+      .app-sidebar::after {
+        display: none;
+      }
+      .sidebar-brand {
+        flex: 1 1 auto;
+        min-width: 0;
+        padding-bottom: 0;
+        margin-bottom: 0;
+        border-bottom: none;
+      }
+      .sidebar-tagline {
+        display: none;
+      }
+      .sidebar-tabs {
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 100%;
+        order: 3;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid rgba(165, 207, 170, 0.08);
+      }
+      .sidebar-tab {
+        flex: 1 1 auto;
+        min-width: 0;
+        justify-content: center;
+        padding: 9px 10px;
+        font-size: 12px;
+      }
+      .sidebar-spacer {
+        display: none;
+      }
+      .sidebar-cloud,
+      .sidebar-discord {
+        flex: 0 0 auto;
+        margin-top: 0;
+        padding: 8px 12px;
+        font-size: 12px;
+      }
+      .app-main-head {
+        padding: 16px 18px 12px;
+      }
+    }
+
+    @keyframes nlTabStagger {
+      from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.92);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    @keyframes nlRailGlow {
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(120, 165, 220, 0);
+      }
+      50% {
+        box-shadow: 0 0 20px -4px rgba(120, 165, 220, 0.12);
+      }
+    }
+    .nl-demo {
+      display: flex;
+      min-height: min(640px, 70vh);
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid #2a2a2a;
+      background: #0b0b0b;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      font-size: 13px;
+      color: #e4e4e4;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+    }
+    .nl-rail {
+      width: 220px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      background: #121212;
+      border-right: 1px solid #242424;
+    }
+    .nl-brand {
+      padding: 18px 16px 14px;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      color: #fff;
+      border-bottom: 1px solid #242424;
+    }
+    .nl-nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 10px 12px;
+    }
+    .nl-group { margin-bottom: 14px; }
+    .nl-group-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: #5c5c5c;
+      text-transform: uppercase;
+      padding: 4px 8px 8px;
+    }
+    .nl-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      text-align: left;
+      padding: 8px 10px;
+      margin-bottom: 2px;
+      border: none;
+      border-radius: 6px;
+      background: transparent;
+      color: #b8b8b8;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .nl-item:hover {
+      background: #1c1c1c;
+      color: #eee;
+    }
+    .nl-item.is-active {
+      background: #1f1f1f;
+      color: #fff;
+    }
+    .nl-ico {
+      width: 16px;
+      text-align: center;
+      opacity: 0.75;
+      font-size: 11px;
+    }
+    .nl-scripts-block { margin-top: 4px; }
+    .nl-term {
+      font-family: ui-monospace, monospace;
+      font-size: 11px;
+      color: #6a6a6a;
+    }
+    .nl-script-name {
+      color: #eaeaea;
+      font-weight: 600;
+      flex: 1;
+      min-width: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .nl-brace { font-family: ui-monospace, monospace; font-size: 11px; color: #555; }
+    .nl-script-name.is-loaded {
+      color: #f2f4f8;
+      letter-spacing: 0.03em;
+    }
+    .nl-preload-full {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px;
+      min-height: 280px;
+    }
+    .nl-preload-full[hidden],
+    #nlPreloadGate[hidden] {
+      display: none !important;
+    }
+    .nl-preload-full p {
+      margin: 0;
+      font-size: 13px;
+      color: #6a6a6a;
+      text-align: center;
+      max-width: 280px;
+      line-height: 1.55;
+    }
+    .nl-preload-full strong {
+      color: #9a9a9a;
+    }
+    .nl-loaded-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .nl-tab-icon {
+      padding: 10px 16px;
+      color: #8ea3b0;
+    }
+    .nl-tab-icon:hover {
+      color: #b8c9d4;
+    }
+    .nl-tab-icon.is-active {
+      color: #fff;
+    }
+    .nl-tab-svg {
+      display: block;
+      width: 18px;
+      height: 18px;
+    }
+    .nl-list-btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 8px 10px;
+      margin: 0;
+      border: none;
+      border-radius: 6px;
+      background: transparent;
+      color: #9a9a9a;
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+    .nl-list-btn:hover {
+      color: #ccc;
+      background: #1a1a1a;
+    }
+    .nl-list-btn.is-sel {
+      background: #1c1c1c;
+      color: #fff;
+    }
+    .nl-list li {
+      padding: 0;
+      margin-bottom: 2px;
+    }
+    .nl-nested {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid #262626;
+    }
+    .nl-team-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .nl-team-btn {
+      flex: 1;
+      padding: 6px 8px;
+      font-size: 11px;
+      border-radius: 6px;
+      border: 1px solid #333;
+      background: #181818;
+      color: #888;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .nl-team-btn.is-sel {
+      border-color: #484848;
+      color: #eee;
+      background: #222;
+    }
+    .nl-config-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .nl-cfg-btn {
+      padding: 8px 14px;
+      font-size: 11px;
+      border-radius: 6px;
+      border: 1px solid #333;
+      background: #1c1c1c;
+      color: #bbb;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .nl-cfg-btn.nl-cfg-wide {
+      width: 100%;
+      text-align: center;
+    }
+    .nl-input {
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 10px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid #333;
+      background: #121212;
+      color: #ddd;
+      font-size: 12px;
+      font-family: inherit;
+    }
+    .nl-info-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #9a9a9a;
+      margin-bottom: 10px;
+    }
+    .nl-accent-dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid #444;
+      flex-shrink: 0;
+    }
+    .nl-stack-col {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 0;
+    }
+    .nl-panel-hidden {
+      display: none !important;
+    }
+    .nl-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 12px 14px;
+      border-top: 1px solid #242424;
+      margin-top: auto;
+    }
+    .nl-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3d3d3d, #1a1a1a);
+      border: 1px solid #333;
+    }
+    .nl-pname { font-size: 12px; font-weight: 650; color: #fff; }
+    .nl-psub { font-size: 10px; color: #666; margin-top: 2px; }
+    .nl-stage {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      background: #0a0a0a;
+    }
+    .nl-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-bottom: 1px solid #242424;
+      background: #111;
+    }
+    .nl-disk {
+      padding: 6px 12px;
+      font-size: 11px;
+      border-radius: 6px;
+      border: 1px solid #333;
+      background: #1a1a1a;
+      color: #ccc;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .nl-disk.nl-save[hidden] {
+      display: none !important;
+    }
+    .nl-tabs {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .nl-tab {
+      padding: 8px 18px;
+      font-size: 12px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: #777;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .nl-tab:hover { color: #bbb; background: #1a1a1a; }
+    .nl-tab.is-active {
+      color: #fff;
+      background: #1e1e1e;
+      box-shadow: 0 0 0 1px #333 inset;
+    }
+    .nl-about-tagline {
+      font-size: 15px;
+      font-weight: 650;
+      margin: 0 0 12px;
+      line-height: 1.4;
+      color: #b8c0ce;
+      letter-spacing: 0.03em;
+    }
+    .nl-about-tagline strong {
+      font-weight: 700;
+      color: #e8ecf4;
+    }
+    .nl-top-right {
+      display: flex;
+      gap: 6px;
+      color: #666;
+    }
+    .nl-ico-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: default;
+      opacity: 0.85;
+    }
+    .nl-views { flex: 1; overflow: auto; padding: 14px; }
+    .nl-main-router {
+      flex: 1;
+      overflow-x: hidden;
+      overflow-y: auto;
+      min-height: 0;
+      position: relative;
+      scrollbar-width: thin;
+      scrollbar-color: #3a3a3a #121212;
+    }
+    .nl-main-router::-webkit-scrollbar {
+      width: 8px;
+    }
+    .nl-main-router::-webkit-scrollbar-track {
+      background: #121212;
+      border-radius: 4px;
+    }
+    .nl-main-router::-webkit-scrollbar-thumb {
+      background: #383838;
+      border-radius: 4px;
+    }
+    .nl-main-router::-webkit-scrollbar-thumb:hover {
+      background: #484848;
+    }
+    .nl-page {
+      display: none;
+      padding: 14px;
+      animation: nlFadeIn 0.2s ease;
+    }
+    .nl-page.is-active {
+      display: block;
+    }
+    @keyframes nlFadeIn {
+      from { opacity: 0.6; }
+      to { opacity: 1; }
+    }
+    .nl-top-slot {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .nl-top-slot > * { min-width: 0; }
+    .nl-top-global[hidden] {
+      display: none !important;
+    }
+    .nl-ess-tabs-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 0;
+      min-height: 0;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transform: translateY(-10px);
+      pointer-events: none;
+      transition:
+        max-height 0.5s cubic-bezier(0.32, 0.72, 0, 1),
+        opacity 0.4s ease,
+        transform 0.45s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .nl-ess-tabs-wrap.is-open {
+      max-height: 72px;
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .nl-ess-tabs-wrap.is-open .nl-tab {
+      animation: nlTabStagger 0.42s cubic-bezier(0.34, 1.2, 0.64, 1) backwards;
+    }
+    .nl-ess-tabs-wrap.is-open .nl-tab:nth-child(1) {
+      animation-delay: 0.04s;
+    }
+    .nl-ess-tabs-wrap.is-open .nl-tab:nth-child(2) {
+      animation-delay: 0.09s;
+    }
+    .nl-ess-tabs-wrap.is-open .nl-tab:nth-child(3) {
+      animation-delay: 0.14s;
+    }
+    .nl-select-hidden {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+    .nl-combo {
+      position: relative;
+      flex: 1;
+      min-width: 0;
+      max-width: 220px;
+      z-index: 1;
+    }
+    .nl-combo.is-open {
+      z-index: 80;
+    }
+    .nl-combo-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #3a3a3a;
+      background: #161616;
+      color: #ececec;
+      font-size: 12px;
+      font-family: inherit;
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+    }
+    .nl-combo-btn:hover {
+      border-color: #4d4d4d;
+      background: #1a1a1a;
+    }
+    .nl-combo.is-open .nl-combo-btn {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.35);
+      background: #181818;
+    }
+    .nl-combo-lbl {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .nl-combo-arrow {
+      flex-shrink: 0;
+      width: 12px;
+      height: 12px;
+      color: #888;
+    }
+    .nl-combo-menu {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      padding: 4px;
+      border-radius: 6px;
+      background: #141414;
+      border: 1px solid #333;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.75);
+      max-height: 240px;
+      overflow-y: auto;
+    }
+    .nl-combo-opt {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 9px 11px;
+      margin: 0;
+      border: none;
+      border-radius: 4px;
+      background: transparent;
+      color: #e4e4e4;
+      font-size: 12px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.1s ease, color 0.1s ease;
+    }
+    .nl-combo-opt:hover,
+    .nl-combo-opt:focus-visible {
+      outline: none;
+      background: #2563eb;
+      color: #fff;
+    }
+    .nl-combo-opt.is-picked {
+      background: #1d4ed8;
+      color: #fff;
+    }
+    .nl-combo-opt.is-picked:hover {
+      background: #2563eb;
+    }
+    .nl-row .nl-combo {
+      max-width: 200px;
+      flex: 0 1 auto;
+    }
+    .nl-top-global .nl-combo {
+      max-width: 200px;
+    }
+    .nl-create-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      font-size: 12px;
+      font-weight: 650;
+      border-radius: 8px;
+      border: 1px solid #4a4a4a;
+      background: linear-gradient(180deg, #4a4a4a, #353535);
+      color: #f0f0f0;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset;
+      transition: filter 0.15s ease, border-color 0.15s ease;
+    }
+    .nl-create-btn:hover {
+      filter: brightness(1.08);
+      border-color: #5a5a5a;
+    }
+    .nl-create-btn svg {
+      width: 15px;
+      height: 15px;
+      opacity: 0.95;
+    }
+    .nl-disk.nl-save {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nl-disk.nl-save svg {
+      width: 13px;
+      height: 13px;
+      opacity: 0.85;
+    }
+    .nl-mkt-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+    }
+    .nl-mkt-ico-play {
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 5px 0 5px 8px;
+      border-color: transparent transparent transparent currentColor;
+      opacity: 0.92;
+      margin-left: 1px;
+    }
+    .nl-mkt-ico-stop {
+      width: 9px;
+      height: 9px;
+      background: currentColor;
+      border-radius: 1px;
+      opacity: 0.92;
+      flex-shrink: 0;
+    }
+    .nl-script-rail-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 10px;
+      background: linear-gradient(165deg, #161616 0%, #111 100%);
+      border: 1px solid #2c2c32;
+      transition: border-color 0.35s ease, transform 0.25s ease, background 0.35s ease;
+    }
+    .nl-script-rail-line[hidden] {
+      display: none !important;
+    }
+    .nl-script-rail-line:hover {
+      border-color: #3d4555;
+    }
+    .nl-script-rail-line.is-page-active {
+      border-color: #4a5568;
+      animation: nlRailGlow 4s ease-in-out infinite;
+    }
+    .nl-script-rail-line.has-tabs-open {
+      border-color: rgba(100, 130, 180, 0.45);
+      background: linear-gradient(165deg, #181a20 0%, #12141a 100%);
+    }
+    .nl-script-rail-inner {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      min-width: 0;
+      border: none;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+      text-align: left;
+      padding: 5px 8px;
+      border-radius: 8px;
+      transition: background 0.22s ease, transform 0.2s ease;
+    }
+    .nl-script-rail-inner:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .nl-script-rail-inner:active {
+      transform: scale(0.985);
+    }
+    .nl-script-rail-inner.is-active {
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .nl-script-rail-chevron {
+      width: 18px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #6a7384;
+      transition: transform 0.45s cubic-bezier(0.32, 0.72, 0, 1), color 0.25s ease;
+    }
+    .nl-script-rail-line.has-tabs-open .nl-script-rail-chevron {
+      transform: rotate(90deg);
+      color: #9aa6bc;
+    }
+    .nl-script-rail-chevron svg {
+      width: 14px;
+      height: 14px;
+      display: block;
+    }
+    .nl-page[data-nl-page="scripts"].nl-scripts-ess-loaded #nlMktEssRow .nl-mkt-title {
+      font-weight: 700;
+    }
+    .nl-seg {
+      display: flex;
+      border-radius: 8px;
+      background: #151515;
+      border: 1px solid #2a2a2a;
+      padding: 2px;
+      gap: 2px;
+    }
+    .nl-seg button {
+      border: none;
+      background: transparent;
+      color: #888;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .nl-seg button.is-active {
+      background: #252525;
+      color: #fff;
+    }
+    .nl-scripts-h {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: #555;
+      margin: 18px 0 10px;
+    }
+    .nl-scripts-h:first-child { margin-top: 0; }
+    .nl-mkt-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      background: #161616;
+      border: 1px solid #2a2a2a;
+      margin-bottom: 8px;
+    }
+    .nl-mkt-row-main { flex: 1; min-width: 0; }
+    .nl-mkt-title { font-weight: 650; color: #eee; font-size: 13px; }
+    .nl-mkt-meta { font-size: 11px; color: #666; margin-top: 4px; }
+    .nl-mkt-dots {
+      width: 28px;
+      height: 28px;
+      border: none;
+      border-radius: 6px;
+      background: #1c1c1c;
+      color: #888;
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+    }
+    .nl-mkt-action {
+      padding: 8px 20px;
+      font-size: 11px;
+      font-weight: 650;
+      border-radius: 8px;
+      border: 1px solid #3a3a3a;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .nl-mkt-action.load {
+      background: linear-gradient(180deg, #2f2f2f, #222);
+      color: #ddd;
+    }
+    .nl-mkt-action.stop {
+      background: transparent;
+      color: #ccc;
+      border-color: #555;
+    }
+    .nl-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items: start;
+      align-content: start;
+    }
+    .nl-grid-2-col {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 0;
+    }
+    @media (max-width: 900px) {
+      .nl-grid-2 { grid-template-columns: 1fr; }
+    }
+    .nl-inv-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 10px;
+    }
+    .nl-inv-card {
+      aspect-ratio: 1;
+      border-radius: 10px;
+      background: linear-gradient(145deg, #1a1a1a, #121212);
+      border: 1px solid #2a2a2a;
+      position: relative;
+      overflow: hidden;
+    }
+    .nl-inv-card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--nl-strip, #6b7fd7);
+    }
+    .nl-inv-cap {
+      padding: 10px 10px 10px 14px;
+      font-size: 11px;
+      color: #aaa;
+    }
+    .nl-slider-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(80px, 1fr) 52px;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: #181818;
+      font-size: 12px;
+      color: #b0b0b0;
+    }
+    .nl-range {
+      width: 100%;
+      height: 4px;
+      border-radius: 2px;
+      background: #333;
+      appearance: none;
+      cursor: pointer;
+    }
+    .nl-range::-webkit-slider-thumb {
+      appearance: none;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: #f5f5f5;
+      border: 2px solid #2a2a2a;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+      margin-top: -5px;
+    }
+    .nl-range::-moz-range-thumb {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: #f5f5f5;
+      border: 2px solid #2a2a2a;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+    }
+    .nl-range-val {
+      text-align: right;
+      font-size: 11px;
+      color: #888;
+      font-variant-numeric: tabular-nums;
+    }
+    .nl-gear {
+      display: inline-flex;
+      width: 14px;
+      justify-content: center;
+      color: #666;
+      margin-right: 4px;
+    }
+    .nl-sheet { display: none; }
+    .nl-sheet.is-active { display: block; }
+    .nl-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+    .nl-card {
+      background: #141414;
+      border: 1px solid #262626;
+      border-radius: 10px;
+      padding: 12px 12px 14px;
+    }
+    .nl-card-h {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      color: #5a5a5a;
+      margin-bottom: 10px;
+    }
+    .nl-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .nl-p {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #8a8a8a;
+    }
+    .nl-p strong { color: #ccc; }
+    .nl-rows { display: flex; flex-direction: column; gap: 8px; }
+    .nl-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: #181818;
+      font-size: 12px;
+      color: #b0b0b0;
+    }
+    .nl-switch {
+      width: 36px;
+      height: 20px;
+      border-radius: 999px;
+      background: #333;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .nl-switch::after {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #666;
+      transition: transform 0.22s ease, background 0.2s ease;
+    }
+    .nl-switch.on { background: #3d3d3d; }
+    .nl-switch.on::after {
+      transform: translateX(16px);
+      background: #f0f0f0;
+    }
+    @media (max-width: 900px) {
+      .nl-demo { flex-direction: column; min-height: 0; }
+      .nl-rail { width: 100%; max-height: 280px; }
+      .nl-cols { grid-template-columns: 1fr; }
+      .nl-tabs { flex-wrap: wrap; justify-content: flex-start; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .nl-ess-tabs-wrap,
+      .nl-ess-tabs-wrap.is-open .nl-tab,
+      .nl-script-rail-line,
+      .nl-script-rail-chevron {
+        animation: none !important;
+        transition: none !important;
+      }
+      .nl-ess-tabs-wrap.is-open {
+        transform: none;
+      }
+      .nl-combo-btn,
+      .nl-combo-opt {
+        transition: none;
+      }
     }
   </style>
 </head>
 <body>
-  <main class="container">
-    <div id="webgl" aria-hidden="true"><canvas id="bg"></canvas></div>
-    <header class="nav">
-      <div class="brand">
+  <div id="webgl" aria-hidden="true"><canvas id="bg"></canvas></div>
+  <div class="app-shell">
+    <aside class="app-sidebar">
+      <div class="sidebar-brand">
         <span class="brand-dot" aria-hidden="true"></span>
-        <span class="gradient-text-mint nav-brand-name">Antagonist.Lua</span>
+        <span class="gradient-text-mint sidebar-brand-name">Antagonist.Lua</span>
       </div>
-      <div class="nav-chips" aria-label="Product highlights">
-        <span class="gradient-text-mint nav-chip">made with love by @scowyl</span>
-      </div>
-      <div class="nav-right">
-        <a class="btn ghost" href="/cloud">Cloud</a>
-      </div>
-    </header>
+      <p class="sidebar-tagline">made with love by @scowyl</p>
+      <nav class="sidebar-tabs" aria-label="Primary">
+        <button type="button" class="sidebar-tab is-active" data-panel="overview">Overview</button>
+        <button type="button" class="sidebar-tab" data-panel="product">Product</button>
+        <button type="button" class="sidebar-tab" data-panel="links">Links</button>
+        <button type="button" class="sidebar-tab" data-panel="showcase">Showcase</button>
+      </nav>
+      <div class="sidebar-spacer"></div>
+      <a class="sidebar-cloud" href="/cloud">Cloud</a>
+      <a class="sidebar-discord btn primary" href="https://discord.gg/9FbB4nX4Km" target="_blank" rel="noreferrer">Discord</a>
+    </aside>
 
+    <div class="app-main">
+      <header class="app-main-head">
+        <p class="app-kicker" id="appKicker">Home</p>
+        <h1 class="app-page-title" id="appPageTitle">Overview</h1>
+        <p class="app-page-desc" id="appPageDesc">Hero, stats, and quick facts.</p>
+        <div class="subtab-row is-hidden" id="productSubtabs" role="tablist" aria-label="Product">
+          <button type="button" class="subtab is-active" role="tab" data-sub="features" aria-selected="true">Features</button>
+          <button type="button" class="subtab" role="tab" data-sub="pricing" aria-selected="false">Pricing</button>
+        </div>
+      </header>
+
+      <div class="app-main-scroll">
+        <main class="container app-inner">
+    <div id="panel-overview" class="app-panel is-active">
     <section class="hero">
       <div class="hero-top reveal d1">
         <span class="badge"><i></i> Premium lua</span>
@@ -909,9 +2441,11 @@
         <div class="stat"><div class="k gradient-text-mint">Cloud</div><div class="v">Profiles sync</div></div>
       </div>
     </section>
+    </div>
 
+    <div id="panel-product" class="app-panel">
     <section class="grid">
-      <article class="card col-6 features-card">
+      <article class="card col-12 features-card product-subpanel" data-sub-panel="features">
         <h2>Features</h2>
         <p class="hint">A quick overview.</p>
         <ul class="features">
@@ -923,7 +2457,7 @@
         </ul>
       </article>
 
-      <article class="card col-6 pricing-card">
+      <article class="card col-12 pricing-card product-subpanel" data-sub-panel="pricing" hidden>
         <h2>Pricing</h2>
         <p class="hint">One plan — everything included.</p>
         <div class="pricing-pill reveal d2"><span class="spark" aria-hidden="true">✦</span> Popular monthly</div>
@@ -940,7 +2474,11 @@
           <a class="pricing-btn pricing-btn-primary" href="https://discord.gg/9FbB4nX4Km" target="_blank" rel="noreferrer">Buy on Discord</a>
         </div>
       </article>
+    </section>
+    </div>
 
+    <div id="panel-links" class="app-panel">
+    <section class="grid">
       <article class="card col-12 links-card">
         <h2>Links</h2>
         <p class="hint">Discord is the main funnel: support, changelog, purchase, announcements.</p>
@@ -966,7 +2504,1178 @@
         </div>
       </article>
     </section>
-  </main>
+    </div>
+
+    <div id="panel-showcase" class="app-panel">
+      <section class="grid">
+        <article class="card col-12" style="padding:0;border:none;background:transparent;box-shadow:none">
+          <div class="nl-demo" aria-label="Menu mockup demo">
+            <aside class="nl-rail">
+              <div class="nl-brand">ESSENTIALS</div>
+              <div class="nl-nav">
+                <div class="nl-group">
+                  <div class="nl-group-label">Aimbot</div>
+                  <button type="button" class="nl-item nl-rail-nav" data-nl-page="rage"><span class="nl-ico">◎</span> Ragebot</button>
+                  <button type="button" class="nl-item nl-rail-nav" data-nl-page="aa"><span class="nl-ico">↺</span> Anti Aim</button>
+                  <button type="button" class="nl-item nl-rail-nav" data-nl-page="legit"><span class="nl-ico">✦</span> Legitbot</button>
+                </div>
+                <div class="nl-group">
+                  <div class="nl-group-label">Visuals</div>
+                  <button type="button" class="nl-item nl-rail-nav" data-nl-page="players"><span class="nl-ico">◎</span> Players</button>
+                  <button type="button" class="nl-item nl-rail-nav" data-nl-page="world"><span class="nl-ico">○</span> World</button>
+                  <button type="button" class="nl-item nl-rail-nav" data-nl-page="inv"><span class="nl-ico">▤</span> Inventory</button>
+                </div>
+                <div class="nl-group">
+                  <div class="nl-group-label">Miscellaneous</div>
+                  <button type="button" class="nl-item nl-rail-nav" data-nl-page="main"><span class="nl-ico">⚙</span> Main</button>
+                  <button type="button" class="nl-item nl-rail-nav is-active" data-nl-page="scripts"><span class="nl-ico">〈〉</span> Scripts</button>
+                  <button type="button" class="nl-item nl-rail-nav" data-nl-page="cfg"><span class="nl-ico">⚒</span> Configs</button>
+                </div>
+                <div class="nl-group nl-scripts-block">
+                  <div class="nl-group-label">Scripts</div>
+                  <div class="nl-script-rail-line" id="nlEssentialsRailLine" hidden>
+                    <button type="button" class="nl-script-rail-inner" id="nlScriptRailToggle" aria-expanded="false" aria-controls="nlTopTabs" aria-label="Show or hide script tabs">
+                      <span class="nl-term">&gt;_</span>
+                      <span class="nl-script-name" id="nlScriptName">essentials</span>
+                      <span class="nl-brace">• { }</span>
+                      <span class="nl-script-rail-chevron" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="nl-profile">
+                <div class="nl-avatar" aria-hidden="true"></div>
+                <div class="nl-pinfo">
+                  <div class="nl-pname">xocudev</div>
+                  <div class="nl-psub">Till: 03.05 13:45</div>
+                </div>
+              </div>
+            </aside>
+            <div class="nl-stage">
+              <header class="nl-top" id="nlTopChrome">
+                <button type="button" class="nl-disk nl-save" id="nlTopSaveBtn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+                  Save
+                </button>
+                <div class="nl-top-slot">
+                  <div class="nl-top-global" id="nlTopGlobal">
+                    <select class="nl-select" id="nlGlobalSelect" aria-label="Sort">
+                      <option selected>Last Modify</option>
+                      <option>Global</option>
+                      <option>Newest</option>
+                    </select>
+                    <button type="button" class="nl-create-btn" id="nlNlCreate">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 12l10 5 10-5"/><path d="M12 17v5"/><path d="M9.5 19.5h5"/></svg>
+                      Create
+                    </button>
+                  </div>
+                  <div class="nl-ess-tabs-wrap" id="nlEssTabsWrap" aria-hidden="true">
+                    <nav class="nl-tabs" id="nlTopTabs" role="tablist" aria-label="essentials tabs">
+                      <button type="button" role="tab" class="nl-tab nl-tab-icon is-active" data-nl-tab="home" aria-selected="true" aria-label="Home">
+                        <svg class="nl-tab-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/></svg>
+                      </button>
+                      <button type="button" role="tab" class="nl-tab nl-tab-icon" data-nl-tab="antiaim" aria-selected="false" aria-label="Anti Aim">
+                        <svg class="nl-tab-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                      </button>
+                      <button type="button" role="tab" class="nl-tab nl-tab-icon" data-nl-tab="extra" aria-selected="false" aria-label="Extra">
+                        <svg class="nl-tab-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6L12 2z"/></svg>
+                      </button>
+                    </nav>
+                  </div>
+                  <div class="nl-players-seg" id="nlPlayersSeg" hidden>
+                    <div class="nl-seg" role="group" aria-label="Target">
+                      <button type="button" class="is-active" data-nl-playsub="en">Enemies</button>
+                      <button type="button" data-nl-playsub="team">Teammates</button>
+                      <button type="button" data-nl-playsub="self">Self</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="nl-top-right" aria-hidden="true">
+                  <span class="nl-ico-btn">💬</span>
+                  <span class="nl-ico-btn">⚙</span>
+                  <span class="nl-ico-btn">⌕</span>
+                </div>
+              </header>
+              <div class="nl-main-router" id="nlMainRouter">
+                <div class="nl-page is-active" data-nl-page="scripts" id="nlScriptsPage">
+                  <div class="nl-scripts-h">— Market Items</div>
+                  <div class="nl-mkt-row" id="nlMktEssRow">
+                    <div class="nl-mkt-row-main">
+                      <div class="nl-mkt-title">Essentials</div>
+                      <div class="nl-mkt-meta">Modified: 21.04.2026 · Author: @scowyl</div>
+                    </div>
+                    <button type="button" class="nl-mkt-dots" aria-label="More">⋯</button>
+                    <button type="button" class="nl-mkt-action load" id="nlLoadEssentials" title="Load or unload essentials"><span class="nl-mkt-ico-play" aria-hidden="true"></span> Load</button>
+                  </div>
+                  <p class="nl-p" style="text-align:center;margin-top:22px;font-size:11px;color:#5a5a5a">Documentation · Market · Recently Deleted</p>
+                </div>
+                <div class="nl-page" data-nl-page="rage" hidden>
+                  <div class="nl-grid-2">
+                    <div class="nl-grid-2-col">
+                    <section class="nl-card">
+                      <div class="nl-card-h">Main</div>
+                      <div class="nl-rows">
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Enabled</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Peek Assist</span><div class="nl-switch" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Hide Shots</span><div class="nl-switch" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Double Tap</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-slider-row"><span>Field of View</span><input type="range" class="nl-range" min="60" max="180" value="180" aria-label="FOV" data-nl-fmt="deg"/><span class="nl-range-val">180°</span></div>
+                      </div>
+                    </section>
+                    <section class="nl-card">
+                      <div class="nl-card-h">Selection</div>
+                      <div class="nl-rows">
+                        <div class="nl-row"><span>Hitboxes</span>
+                          <select class="nl-select" style="max-width:160px"><option>Head, Chest, Stomach</option><option>Head</option><option>Body</option></select>
+                        </div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Multipoint</span>
+                          <select class="nl-select" style="max-width:160px"><option>Head, Chest…</option></select>
+                        </div>
+                        <div class="nl-slider-row"><span><span class="nl-gear">⚙</span>Hit Chance</span><input type="range" class="nl-range" min="0" max="100" value="46" aria-label="Hit chance" data-nl-fmt="pct"/><span class="nl-range-val">46%</span></div>
+                        <div class="nl-slider-row"><span><span class="nl-gear">⚙</span>Min. Damage</span><input type="range" class="nl-range" min="0" max="100" value="1" aria-label="Min damage" data-nl-fmt="plus"/><span class="nl-range-val">+1</span></div>
+                        <div class="nl-row"><span>Penetrate Walls</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                      </div>
+                    </section>
+                    </div>
+                    <div class="nl-grid-2-col">
+                    <section class="nl-card">
+                      <div class="nl-card-h">Accuracy</div>
+                      <div class="nl-rows">
+                        <div class="nl-row"><span>Auto Scope</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Auto Stop</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                      </div>
+                    </section>
+                    <section class="nl-card">
+                      <div class="nl-card-h">Safety</div>
+                      <div class="nl-rows">
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Body Aim</span>
+                          <select class="nl-select" style="max-width:120px"><option>Default</option><option>Prefer</option></select>
+                        </div>
+                        <div class="nl-row"><span>Safe Points</span>
+                          <select class="nl-select" style="max-width:120px"><option>Default</option></select>
+                        </div>
+                        <div class="nl-row"><span>Ensure Hitbox Safety</span>
+                          <select class="nl-select" style="max-width:140px"><option>Chest, Legs, Feet</option></select>
+                        </div>
+                      </div>
+                    </section>
+                    </div>
+                  </div>
+                </div>
+                <div class="nl-page" data-nl-page="aa" hidden>
+                  <div class="nl-grid-2">
+                    <div class="nl-grid-2-col">
+                    <section class="nl-card">
+                      <div class="nl-card-h">Angles</div>
+                      <div class="nl-rows">
+                        <div class="nl-row"><span>Enabled</span><div class="nl-switch" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span>Pitch</span>
+                          <select class="nl-select" style="max-width:120px"><option>Down</option><option>Up</option><option>Zero</option></select>
+                        </div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Yaw</span>
+                          <select class="nl-select" style="max-width:120px"><option>Backward</option><option>Forward</option></select>
+                        </div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Yaw Modifier</span>
+                          <select class="nl-select" style="max-width:120px"><option>Disabled</option><option>Jitter</option></select>
+                        </div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Body Yaw</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Freestanding</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Extended Angles</span><div class="nl-switch" aria-hidden="true"></div></div>
+                      </div>
+                    </section>
+                    <section class="nl-card">
+                      <div class="nl-card-h">Misc</div>
+                      <div class="nl-rows">
+                        <div class="nl-row"><span>Fake Duck</span><div class="nl-switch" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span>Slow Walk</span><div class="nl-switch" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span>Leg Movement</span>
+                          <select class="nl-select" style="max-width:120px"><option>Sliding</option><option>Static</option></select>
+                        </div>
+                      </div>
+                    </section>
+                    </div>
+                    <div class="nl-grid-2-col">
+                    <section class="nl-card">
+                      <div class="nl-card-h">Fake Lag</div>
+                      <div class="nl-rows">
+                        <div class="nl-row"><span>Enabled</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-slider-row"><span>Limit</span><input type="range" class="nl-range" min="1" max="16" value="12" aria-label="Fake lag limit" data-nl-fmt="num"/><span class="nl-range-val">12</span></div>
+                        <div class="nl-slider-row"><span>Variability</span><input type="range" class="nl-range" min="0" max="100" value="10" aria-label="Variability" data-nl-fmt="pct"/><span class="nl-range-val">10%</span></div>
+                      </div>
+                    </section>
+                    </div>
+                  </div>
+                </div>
+                <div class="nl-page" data-nl-page="legit" hidden>
+                  <div class="nl-grid-2">
+                    <div class="nl-grid-2-col">
+                    <section class="nl-card">
+                      <div class="nl-card-h">Main</div>
+                      <div class="nl-rows">
+                        <div class="nl-row"><span>Enabled</span><div class="nl-switch" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span>Activation</span>
+                          <select class="nl-select" style="max-width:120px"><option>Hotkey</option><option>Always</option></select>
+                        </div>
+                        <div class="nl-row"><span>Hotkey</span><button type="button" class="nl-team-btn" style="flex:0">M1</button></div>
+                        <div class="nl-row"><span>Aimbot Disablers</span>
+                          <select class="nl-select" style="max-width:120px"><option>Select</option></select>
+                        </div>
+                      </div>
+                    </section>
+                    <section class="nl-card">
+                      <div class="nl-card-h">Misc</div>
+                      <div class="nl-rows">
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Automatic Fire</span><div class="nl-switch" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Penetrate Walls</span><div class="nl-switch" aria-hidden="true"></div></div>
+                        <div class="nl-slider-row"><span>Kill Delay</span><input type="range" class="nl-range" min="0" max="1000" value="500" aria-label="Kill delay" data-nl-fmt="num"/><span class="nl-range-val">500</span></div>
+                        <div class="nl-slider-row"><span>First Bullet Delay</span><input type="range" class="nl-range" min="0" max="1000" value="500" aria-label="FBD" data-nl-fmt="num"/><span class="nl-range-val">500</span></div>
+                        <div class="nl-slider-row"><span>Backtracking</span><input type="range" class="nl-range" min="0" max="200" value="0" aria-label="BT" data-nl-fmt="num"/><span class="nl-range-val">0</span></div>
+                        <div class="nl-row"><span>Visualize FOV</span><span class="nl-accent-dot" style="background:#2a4a7a"></span><div class="nl-switch" aria-hidden="true"></div></div>
+                      </div>
+                    </section>
+                    </div>
+                    <div class="nl-grid-2-col">
+                    <section class="nl-card">
+                      <div class="nl-card-h">Accuracy</div>
+                      <div class="nl-rows">
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Recoil Control</span>
+                          <select class="nl-select" style="max-width:100px"><option>Off</option><option>On</option></select>
+                        </div>
+                        <div class="nl-slider-row"><span>Field Of View</span><input type="range" class="nl-range" min="1" max="300" value="100" step="1" aria-label="Legit FOV" data-nl-fmt="tenthdeg"/><span class="nl-range-val">10.0°</span></div>
+                        <div class="nl-slider-row"><span>Smooth</span><input type="range" class="nl-range" min="0" max="100" value="50" aria-label="Smooth" data-nl-fmt="pct"/><span class="nl-range-val">50%</span></div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Override First Bullet</span><div class="nl-switch" aria-hidden="true"></div></div>
+                      </div>
+                    </section>
+                    </div>
+                  </div>
+                </div>
+                <div class="nl-page" data-nl-page="players" hidden>
+                  <div class="nl-grid-2">
+                    <div class="nl-grid-2-col">
+                    <section class="nl-card">
+                      <div class="nl-card-h">ESP</div>
+                      <div class="nl-rows">
+                        <div class="nl-row"><span>Behind Walls</span><div class="nl-switch" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span>Dormant</span><div class="nl-switch" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Shared ESP</span><div class="nl-switch" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span>In-Game Radar</span><div class="nl-switch" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Bullet Tracer</span><div class="nl-switch" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Offscreen ESP</span><div class="nl-switch" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span>Sounds</span><span class="nl-accent-dot" style="background:#4a7abd"></span><div class="nl-switch" aria-hidden="true"></div></div>
+                      </div>
+                    </section>
+                    </div>
+                    <div class="nl-grid-2-col">
+                    <section class="nl-card">
+                      <div class="nl-card-h">Chams</div>
+                      <div class="nl-rows">
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Model</span><div class="nl-switch" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Glow</span><div class="nl-switch" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Weapon</span><div class="nl-switch" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>History</span><div class="nl-switch" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>On Shot</span><div class="nl-switch" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Ragdolls</span><div class="nl-switch" aria-hidden="true"></div></div>
+                      </div>
+                    </section>
+                    </div>
+                  </div>
+                </div>
+                <div class="nl-page" data-nl-page="world" hidden>
+                  <div class="nl-grid-2">
+                    <div class="nl-grid-2-col">
+                    <section class="nl-card">
+                      <div class="nl-card-h">Main</div>
+                      <div class="nl-rows">
+                        <div class="nl-slider-row"><span>Field of View</span><input type="range" class="nl-range" min="60" max="140" value="115" aria-label="World FOV" data-nl-fmt="deg"/><span class="nl-range-val">115°</span></div>
+                        <div class="nl-slider-row"><span><span class="nl-gear">⚙</span>Override Zoom</span><input type="range" class="nl-range" min="0" max="100" value="0" aria-label="Zoom" data-nl-fmt="pct"/><span class="nl-range-val">0%</span></div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Force Thirdperson</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span>Visual Recoil</span>
+                          <select class="nl-select" style="max-width:140px"><option>Remove Shake</option><option>Default</option></select>
+                        </div>
+                        <div class="nl-row"><span>Removals</span>
+                          <select class="nl-select" style="max-width:160px"><option>Flashbang, Smoke</option></select>
+                        </div>
+                      </div>
+                    </section>
+                    <section class="nl-card">
+                      <div class="nl-card-h">World ESP</div>
+                      <div class="nl-rows">
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Bomb</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Weapons</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Grenades</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span>Crosshair</span>
+                          <select class="nl-select" style="max-width:160px"><option>Sniper, Penetration</option></select>
+                        </div>
+                      </div>
+                    </section>
+                    </div>
+                    <div class="nl-grid-2-col">
+                    <section class="nl-card">
+                      <div class="nl-card-h">Ambient</div>
+                      <div class="nl-rows">
+                        <div class="nl-row"><span>Night Mode</span><span class="nl-accent-dot" style="background:#111"></span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span>Static Props</span><span class="nl-accent-dot" style="background:#2a3a5a"></span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span>Post Processing</span><span class="nl-accent-dot" style="background:#555"></span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Fog Changer</span>
+                          <select class="nl-select" style="max-width:120px"><option>Override</option></select>
+                        </div>
+                        <div class="nl-row"><span>Skybox Changer</span><span class="nl-accent-dot" style="background:#fff"></span>
+                          <select class="nl-select" style="max-width:100px"><option>Italy</option></select>
+                        </div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Illumination</span>
+                          <select class="nl-select" style="max-width:120px"><option>Sunlight</option></select>
+                        </div>
+                      </div>
+                    </section>
+                    <section class="nl-card">
+                      <div class="nl-card-h">Other</div>
+                      <div class="nl-rows">
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Hit Marker</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Hit Marker Sound</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Bullet Impacts</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Grenade Prediction</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span>Grenade Proximity Warning</span><span class="nl-accent-dot" style="background:#c44"></span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-slider-row"><span>Asus Walls</span><input type="range" class="nl-range" min="0" max="100" value="0" aria-label="Asus walls" data-nl-fmt="num"/><span class="nl-range-val">0</span></div>
+                        <div class="nl-slider-row"><span>Asus Props</span><input type="range" class="nl-range" min="0" max="100" value="0" aria-label="Asus props" data-nl-fmt="num"/><span class="nl-range-val">0</span></div>
+                      </div>
+                    </section>
+                    </div>
+                  </div>
+                </div>
+                <div class="nl-page" data-nl-page="inv" hidden>
+                  <div class="nl-card-h" style="margin-bottom:12px">Inventory</div>
+                  <div class="nl-inv-grid">
+                    <div class="nl-inv-card" style="--nl-strip:#c44"><div class="nl-inv-cap">Knife</div></div>
+                    <div class="nl-inv-card" style="--nl-strip:#4a7abd"><div class="nl-inv-cap">AWP</div></div>
+                    <div class="nl-inv-card" style="--nl-strip:#7b4abd"><div class="nl-inv-cap">AK-47</div></div>
+                    <div class="nl-inv-card" style="--nl-strip:#3d7d5a"><div class="nl-inv-cap">M4A1-S</div></div>
+                    <div class="nl-inv-card" style="--nl-strip:#b8860b"><div class="nl-inv-cap">Deagle</div></div>
+                    <div class="nl-inv-card" style="--nl-strip:#666"><div class="nl-inv-cap">Glove</div></div>
+                  </div>
+                </div>
+                <div class="nl-page" data-nl-page="main" hidden>
+                  <div class="nl-grid-2">
+                    <div class="nl-grid-2-col">
+                    <section class="nl-card">
+                      <div class="nl-card-h">Movement</div>
+                      <div class="nl-rows">
+                        <div class="nl-row"><span>Bunny Hop</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Air Strafe</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span><span class="nl-gear">⚙</span>Air Duck</span><div class="nl-switch" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span>Quick Stop</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span>Strafe Assist</span><div class="nl-switch" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span>Infinite Duck</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span>Edge Jump</span><div class="nl-switch" aria-hidden="true"></div></div>
+                      </div>
+                    </section>
+                    <section class="nl-card">
+                      <div class="nl-card-h">In-Game</div>
+                      <div class="nl-rows">
+                        <div class="nl-row"><span>Clan Tag</span><div class="nl-switch" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span>Shared Features</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span>Preserve Kill Feed</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span>Reveals</span>
+                          <select class="nl-select" style="max-width:140px"><option>Enemy Chat</option></select>
+                        </div>
+                      </div>
+                    </section>
+                    </div>
+                    <div class="nl-grid-2-col">
+                    <section class="nl-card">
+                      <div class="nl-card-h">Other</div>
+                      <div class="nl-rows">
+                        <div class="nl-row"><span>Anti Untrusted</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span>Unlock Hidden Cvars</span><div class="nl-switch" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span>Filters</span>
+                          <select class="nl-select" style="max-width:120px"><option>Console</option></select>
+                        </div>
+                        <div class="nl-row"><span>Windows</span>
+                          <select class="nl-select" style="max-width:120px"><option>Hotkeys</option></select>
+                        </div>
+                        <div class="nl-row"><span>Log Events</span>
+                          <select class="nl-select" style="max-width:120px"><option>Select</option></select>
+                        </div>
+                        <div class="nl-row"><span>Weapon Actions</span>
+                          <select class="nl-select" style="max-width:160px"><option>Quick Switch, Auto…</option></select>
+                        </div>
+                        <div class="nl-slider-row"><span>Fake Latency</span><input type="range" class="nl-range" min="0" max="200" value="0" aria-label="Fake latency" data-nl-fmt="num"/><span class="nl-range-val">0</span></div>
+                        <div class="nl-row"><span>Fake Latency · Enable</span><div class="nl-switch" aria-hidden="true"></div></div>
+                      </div>
+                    </section>
+                    <section class="nl-card">
+                      <div class="nl-card-h">Buybot</div>
+                      <div class="nl-rows">
+                        <div class="nl-row"><span>Enabled</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                        <div class="nl-row"><span>Primary</span>
+                          <select class="nl-select" style="max-width:140px"><option>Scout</option></select>
+                        </div>
+                        <div class="nl-row"><span>Secondary</span>
+                          <select class="nl-select" style="max-width:200px"><option>Tec-9 / Five-S / CZ</option></select>
+                        </div>
+                        <div class="nl-row"><span>Equipment</span>
+                          <select class="nl-select" style="max-width:200px"><option>Kevlar, Helmet, De…</option></select>
+                        </div>
+                      </div>
+                    </section>
+                    </div>
+                  </div>
+                </div>
+                <div class="nl-page" data-nl-page="cfg" hidden>
+                  <div class="nl-scripts-h">— My Configs</div>
+                  <div class="nl-mkt-row">
+                    <div class="nl-mkt-row-main">
+                      <div class="nl-mkt-title">EA7's Config</div>
+                      <div class="nl-mkt-meta">Modified: 04.04 17:51 · Author: 7vlex</div>
+                    </div>
+                    <button type="button" class="nl-mkt-dots" aria-label="More">⋯</button>
+                    <button type="button" class="nl-mkt-action load">Load</button>
+                  </div>
+                  <div class="nl-mkt-row">
+                    <div class="nl-mkt-row-main">
+                      <div class="nl-mkt-title">Default</div>
+                      <div class="nl-mkt-meta">Modified: 01.01 00:00 · Author: —</div>
+                    </div>
+                    <button type="button" class="nl-mkt-dots" aria-label="More">⋯</button>
+                    <button type="button" class="nl-mkt-action load">Save</button>
+                  </div>
+                  <p class="nl-p" style="text-align:center;margin-top:16px;font-size:11px;color:#555">Market · Recently Deleted</p>
+                </div>
+                <div class="nl-page" data-nl-page="essentials" hidden>
+                <div class="nl-loaded-body" id="nlLoadedBody">
+                <div class="nl-views">
+                  <div class="nl-sheet is-active" data-nl-view="home" role="tabpanel">
+                    <div class="nl-cols">
+                      <section class="nl-card">
+                        <div class="nl-card-h">Home</div>
+                        <ul class="nl-list" id="nlHomeSub">
+                          <li><button type="button" class="nl-list-btn is-sel" data-home-sub="info">• Info</button></li>
+                          <li><button type="button" class="nl-list-btn" data-home-sub="configs">• Configs</button></li>
+                        </ul>
+                      </section>
+                      <div class="nl-stack-col">
+                        <section class="nl-card nl-home-panel" data-home-panel="info">
+                          <div class="nl-card-h">Info</div>
+                          <div class="nl-info-row"><span aria-hidden="true">👋</span> Welcome back, @scowyl</div>
+                          <div class="nl-info-row"><span aria-hidden="true">🔗</span> Last Update: 21.04.2026</div>
+                          <div class="nl-info-row"><span aria-hidden="true">🎨</span> Accent Color <span class="nl-accent-dot" aria-hidden="true"></span></div>
+                        </section>
+                        <section class="nl-card nl-home-panel nl-panel-hidden" data-home-panel="configs">
+                          <div class="nl-card-h">Configs</div>
+                          <ul class="nl-list">
+                            <li><button type="button" class="nl-list-btn is-sel">Default</button></li>
+                            <li><button type="button" class="nl-list-btn">123</button></li>
+                          </ul>
+                          <label class="nl-card-h" style="margin-top:12px">Config name</label>
+                          <input class="nl-input" type="text" value="123" readonly aria-label="Config name" />
+                          <button type="button" class="nl-cfg-btn nl-cfg-wide">Create</button>
+                          <div class="nl-config-actions">
+                            <button type="button" class="nl-cfg-btn">Load</button>
+                            <button type="button" class="nl-cfg-btn">Save</button>
+                            <button type="button" class="nl-cfg-btn">Remove</button>
+                          </div>
+                          <div class="nl-config-actions">
+                            <button type="button" class="nl-cfg-btn">Import</button>
+                            <button type="button" class="nl-cfg-btn">Export</button>
+                          </div>
+                        </section>
+                        <section class="nl-card">
+                          <div class="nl-card-h">About</div>
+                          <p class="nl-p nl-about-tagline" style="margin:0"><strong>essentials</strong> — future of 2026</p>
+                        </section>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="nl-sheet" data-nl-view="antiaim" role="tabpanel" hidden>
+                    <div class="nl-cols">
+                      <section class="nl-card">
+                        <div class="nl-card-h">States</div>
+                        <ul class="nl-list" id="nlAaSection">
+                          <li><button type="button" class="nl-list-btn is-sel" data-aa-sec="builder">Builder</button></li>
+                          <li><button type="button" class="nl-list-btn" data-aa-sec="addons">Addons</button></li>
+                        </ul>
+                        <div class="nl-nested" id="nlAaBuilderNest">
+                          <div class="nl-team-row">
+                            <button type="button" class="nl-team-btn is-sel" data-aa-team="t">• Terrorists</button>
+                            <button type="button" class="nl-team-btn" data-aa-team="ct">• Counter-Terrorists</button>
+                          </div>
+                          <ul class="nl-list" id="nlAaStates">
+                            <li><button type="button" class="nl-list-btn is-sel" data-aa-state="0">Shared</button></li>
+                            <li><button type="button" class="nl-list-btn" data-aa-state="1">Standing</button></li>
+                            <li><button type="button" class="nl-list-btn" data-aa-state="2">Running</button></li>
+                            <li><button type="button" class="nl-list-btn" data-aa-state="3">Slowing</button></li>
+                            <li><button type="button" class="nl-list-btn" data-aa-state="4">Crouching</button></li>
+                            <li><button type="button" class="nl-list-btn" data-aa-state="5">Sneaking</button></li>
+                            <li><button type="button" class="nl-list-btn" data-aa-state="6">Air</button></li>
+                            <li><button type="button" class="nl-list-btn" data-aa-state="7">Air Crouching</button></li>
+                            <li><button type="button" class="nl-list-btn" data-aa-state="8">Freestanding</button></li>
+                            <li><button type="button" class="nl-list-btn" data-aa-state="9">Fake-Duck</button></li>
+                          </ul>
+                        </div>
+                        <div class="nl-nested nl-panel-hidden" id="nlAaAddonsNest">
+                          <p class="nl-p">Addons (mock)</p>
+                        </div>
+                      </section>
+                      <div class="nl-stack-col">
+                        <section class="nl-card">
+                          <div class="nl-card-h">Builder</div>
+                          <div class="nl-rows">
+                            <div class="nl-row"><span>Enable</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                            <div class="nl-row"><span>Override</span><div class="nl-switch" aria-hidden="true"></div></div>
+                          </div>
+                        </section>
+                        <section class="nl-card">
+                          <div class="nl-card-h">Builder Values</div>
+                          <div class="nl-rows">
+                            <div class="nl-slider-row"><span>Add Left</span><input type="range" class="nl-range" min="-90" max="90" value="0" aria-label="Add left" data-nl-fmt="deg"/><span class="nl-range-val">0°</span></div>
+                            <div class="nl-slider-row"><span>Add Right</span><input type="range" class="nl-range" min="-90" max="90" value="0" aria-label="Add right" data-nl-fmt="deg"/><span class="nl-range-val">0°</span></div>
+                            <div class="nl-slider-row"><span>Randomization</span><input type="range" class="nl-range" min="0" max="100" value="0" aria-label="Randomization" data-nl-fmt="pct"/><span class="nl-range-val">0%</span></div>
+                            <div class="nl-row"><span>Modifier</span>
+                              <select class="nl-select" style="max-width:130px"><option>Disabled</option><option>Center</option><option>Offset</option><option>Jitter</option></select>
+                            </div>
+                            <div class="nl-row"><span>Body Yaw</span>
+                              <select class="nl-select" style="max-width:130px"><option>Jitter</option><option>Static</option><option>Opposite</option></select>
+                            </div>
+                          </div>
+                        </section>
+                        <section class="nl-card">
+                          <div class="nl-card-h">Defensive</div>
+                          <div class="nl-rows">
+                            <div class="nl-row"><span>Defensive</span><div class="nl-switch" aria-hidden="true"></div></div>
+                            <div class="nl-row"><span>Defensive · Enable</span><div class="nl-switch" aria-hidden="true"></div></div>
+                          </div>
+                        </section>
+                        <section class="nl-card">
+                          <div class="nl-card-h">Hotkeys</div>
+                          <div class="nl-rows">
+                            <div class="nl-row"><span>Freestanding</span><div class="nl-switch" aria-hidden="true"></div></div>
+                            <div class="nl-row"><span>Manual Yaw</span><span style="color:#666;font-size:11px">…</span></div>
+                          </div>
+                        </section>
+                        <section class="nl-card">
+                          <div class="nl-card-h">Options</div>
+                          <div class="nl-rows">
+                            <div class="nl-row"><span>Avoid Backstab</span><div class="nl-switch" aria-hidden="true"></div></div>
+                            <div class="nl-row"><span>Safe Head</span><div class="nl-switch" aria-hidden="true"></div></div>
+                            <div class="nl-row"><span>Flicks</span><div class="nl-switch" aria-hidden="true"></div></div>
+                          </div>
+                        </section>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="nl-sheet" data-nl-view="extra" role="tabpanel" hidden>
+                    <div class="nl-cols">
+                      <section class="nl-card">
+                        <div class="nl-card-h">General</div>
+                        <ul class="nl-list" id="nlExtraSub">
+                          <li><button type="button" class="nl-list-btn is-sel" data-extra-sub="visuals">• Visuals</button></li>
+                          <li><button type="button" class="nl-list-btn" data-extra-sub="misc">• Misc</button></li>
+                        </ul>
+                      </section>
+                      <div class="nl-stack-col">
+                        <section class="nl-card nl-extra-panel" data-extra-panel="visuals">
+                          <div class="nl-card-h">Visuals</div>
+                          <div class="nl-rows">
+                            <div class="nl-row"><span>Aspect Ratio</span><div class="nl-switch" aria-hidden="true"></div></div>
+                            <div class="nl-row"><span>Animations</span><div class="nl-switch" aria-hidden="true"></div></div>
+                            <div class="nl-row"><span>Aimbot Logs</span><div class="nl-switch" aria-hidden="true"></div></div>
+                            <div class="nl-row"><span>Custom Scope</span><div class="nl-switch" aria-hidden="true"></div></div>
+                            <div class="nl-row"><span>Viewmodel</span><div class="nl-switch" aria-hidden="true"></div></div>
+                          </div>
+                        </section>
+                        <section class="nl-card nl-extra-panel nl-panel-hidden" data-extra-panel="misc">
+                          <div class="nl-card-h">Miscellaneous</div>
+                          <div class="nl-rows">
+                            <div class="nl-row"><span>No Fall Damage</span><div class="nl-switch" aria-hidden="true"></div></div>
+                            <div class="nl-row"><span>Super Toss</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                            <div class="nl-row"><span>Jump Scout</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                            <div class="nl-row"><span>Fast Ladder</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                            <div class="nl-row"><span>Trash-Talk</span><div class="nl-switch on" aria-hidden="true"></div></div>
+                            <div class="nl-row"><span>Clan-Tag Spammer</span><div class="nl-switch" aria-hidden="true"></div></div>
+                          </div>
+                        </section>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+    </div>
+
+        </main>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var meta = {
+        overview: { kicker: "Home", title: "Overview", desc: "Hero, stats, and quick facts." },
+        product: { kicker: "Product", title: "Product", desc: "Features and pricing." },
+        links: { kicker: "Community", title: "Links", desc: "Discord, YouTube, Telegram." },
+        showcase: { kicker: "Demo", title: "Showcase", desc: "Showcase right in the site! cool isnt it?" }
+      };
+      var subtabs = document.getElementById("productSubtabs");
+      var kicker = document.getElementById("appKicker");
+      var title = document.getElementById("appPageTitle");
+      var desc = document.getElementById("appPageDesc");
+      var mainHead = document.querySelector(".app-main-head");
+      var scrollRoot = document.querySelector(".app-main-scroll");
+      var headAnimTimer;
+      var scrollIO = null;
+
+      function pulseHead() {
+        if (!mainHead) return;
+        mainHead.classList.remove("is-animating");
+        void mainHead.offsetWidth;
+        mainHead.classList.add("is-animating");
+        clearTimeout(headAnimTimer);
+        headAnimTimer = setTimeout(function () {
+          mainHead.classList.remove("is-animating");
+        }, 620);
+      }
+
+      function setPanel(name) {
+        var m = meta[name];
+        if (m && kicker) kicker.textContent = m.kicker;
+        if (m && title) title.textContent = m.title;
+        if (m && desc) desc.textContent = m.desc;
+        document.querySelectorAll(".sidebar-tab").forEach(function (b) {
+          b.classList.toggle("is-active", b.getAttribute("data-panel") === name);
+        });
+        document.querySelectorAll(".app-panel").forEach(function (p) {
+          p.classList.toggle("is-active", p.id === "panel-" + name);
+        });
+        if (scrollIO) {
+          setTimeout(function () {
+            document.querySelectorAll(".app-panel.is-active .io-rise:not(.is-inview)").forEach(function (el) {
+              scrollIO.observe(el);
+            });
+          }, 520);
+        }
+        if (subtabs) {
+          subtabs.classList.toggle("is-hidden", name !== "product");
+        }
+        if (name === "product") {
+          var cur = document.querySelector(".subtab.is-active");
+          setProductSub(cur ? cur.getAttribute("data-sub") : "features");
+        } else {
+          pulseHead();
+        }
+      }
+
+      function setProductSub(sub) {
+        document.querySelectorAll(".subtab").forEach(function (b) {
+          var on = b.getAttribute("data-sub") === sub;
+          b.classList.toggle("is-active", on);
+          b.setAttribute("aria-selected", on ? "true" : "false");
+        });
+        document.querySelectorAll(".product-subpanel").forEach(function (el) {
+          var show = el.getAttribute("data-sub-panel") === sub;
+          el.hidden = !show;
+        });
+        if (sub === "features" && title && desc) {
+          title.textContent = "Product";
+          desc.textContent = "Feature overview.";
+        } else if (sub === "pricing" && title && desc) {
+          title.textContent = "Product";
+          desc.textContent = "Pricing and purchase.";
+        }
+        pulseHead();
+      }
+
+      document.querySelectorAll(".sidebar-tab").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          setPanel(btn.getAttribute("data-panel"));
+        });
+      });
+      document.querySelectorAll(".subtab").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          setProductSub(btn.getAttribute("data-sub"));
+        });
+      });
+
+      function initScrollAnimations() {
+        if (!scrollRoot) return;
+        if (typeof IntersectionObserver === "undefined") {
+          document.querySelectorAll(".features-card ul.features li, .links-card .link-row").forEach(function (el) {
+            el.classList.add("io-rise", "is-inview");
+          });
+          return;
+        }
+        scrollIO = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (en) {
+              if (!en.isIntersecting) return;
+              en.target.classList.add("is-inview");
+              scrollIO.unobserve(en.target);
+            });
+          },
+          { root: scrollRoot, threshold: 0.1, rootMargin: "0px 0px -24px 0px" }
+        );
+        var n = 0;
+        document.querySelectorAll(".features-card ul.features li, .links-card .link-row").forEach(function (el) {
+          el.classList.add("io-rise");
+          el.style.setProperty("--io-delay", n * 0.07 + "s");
+          n += 1;
+          scrollIO.observe(el);
+        });
+      }
+
+      function boot() {
+        var side = document.querySelector(".app-sidebar");
+        if (side) {
+          requestAnimationFrame(function () {
+            side.classList.add("sidebar-ready");
+          });
+        }
+        initScrollAnimations();
+      }
+
+      function initShowcaseMock() {
+        var demo = document.querySelector(".nl-demo");
+        var router = document.getElementById("nlMainRouter");
+        var loadBtn = document.getElementById("nlLoadEssentials");
+        var scriptName = document.getElementById("nlScriptName");
+        var essentialsRailLine = document.getElementById("nlEssentialsRailLine");
+        var topSaveBtn = document.getElementById("nlTopSaveBtn");
+        var loadedBody = document.getElementById("nlLoadedBody");
+        var topGlobal = document.getElementById("nlTopGlobal");
+        var essWrap = document.getElementById("nlEssTabsWrap");
+        var playersSeg = document.getElementById("nlPlayersSeg");
+        var tabBar = document.getElementById("nlTopTabs");
+        var scriptRailToggle = document.getElementById("nlScriptRailToggle");
+        var nav = document.querySelector(".nl-nav");
+        if (!demo || !router || !loadBtn || !tabBar || !loadedBody) return;
+
+        var essentialsLoaded = false;
+        var essTabsVisible = false;
+        var currentPage = "scripts";
+        var currentEssTab = "home";
+
+        function closeAllNlCombos() {
+          demo.querySelectorAll(".nl-combo.is-open").forEach(function (c) {
+            c.classList.remove("is-open");
+            var mn = c.querySelector(".nl-combo-menu");
+            if (mn) mn.hidden = true;
+            var bb = c.querySelector(".nl-combo-btn");
+            if (bb) bb.setAttribute("aria-expanded", "false");
+          });
+        }
+
+        function initNlCombos() {
+          if (demo.dataset.nlCombosBuilt) return;
+          demo.querySelectorAll("select.nl-select").forEach(function (sel) {
+            if (sel.dataset.nlComboConverted) return;
+            sel.dataset.nlComboConverted = "1";
+            sel.classList.add("nl-select-hidden");
+            sel.setAttribute("tabindex", "-1");
+            sel.setAttribute("aria-hidden", "true");
+            var wrap = document.createElement("div");
+            wrap.className = "nl-combo";
+            if (sel.style && sel.style.maxWidth) wrap.style.maxWidth = sel.style.maxWidth;
+            var btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "nl-combo-btn";
+            btn.setAttribute("aria-haspopup", "listbox");
+            btn.setAttribute("aria-expanded", "false");
+            var lbl = document.createElement("span");
+            lbl.className = "nl-combo-lbl";
+            var idx = Math.max(0, sel.selectedIndex);
+            lbl.textContent = sel.options[idx] ? sel.options[idx].textContent : "";
+            var svgNs = "http://www.w3.org/2000/svg";
+            var svg = document.createElementNS(svgNs, "svg");
+            svg.setAttribute("class", "nl-combo-arrow");
+            svg.setAttribute("viewBox", "0 0 24 24");
+            svg.setAttribute("aria-hidden", "true");
+            var pathEl = document.createElementNS(svgNs, "path");
+            pathEl.setAttribute("fill", "none");
+            pathEl.setAttribute("stroke", "currentColor");
+            pathEl.setAttribute("stroke-width", "2");
+            pathEl.setAttribute("d", "M6 9l6 6 6-6");
+            svg.appendChild(pathEl);
+            btn.appendChild(lbl);
+            btn.appendChild(svg);
+            var menu = document.createElement("div");
+            menu.className = "nl-combo-menu";
+            menu.hidden = true;
+            menu.setAttribute("role", "listbox");
+            Array.prototype.forEach.call(sel.options, function (opt, i) {
+              var ob = document.createElement("button");
+              ob.type = "button";
+              ob.className = "nl-combo-opt" + (i === idx ? " is-picked" : "");
+              ob.setAttribute("role", "option");
+              ob.setAttribute("data-index", String(i));
+              ob.textContent = opt.textContent;
+              menu.appendChild(ob);
+            });
+            sel.parentNode.insertBefore(wrap, sel);
+            wrap.appendChild(btn);
+            wrap.appendChild(menu);
+            wrap.appendChild(sel);
+          });
+          demo.dataset.nlCombosBuilt = "1";
+        }
+
+        if (!demo.dataset.nlComboEvents) {
+          demo.dataset.nlComboEvents = "1";
+          document.addEventListener("click", function (e) {
+            if (!demo.contains(e.target)) {
+              closeAllNlCombos();
+              return;
+            }
+            var opt = e.target.closest(".nl-combo-opt");
+            if (opt) {
+              var cw = opt.closest(".nl-combo");
+              if (cw && demo.contains(cw)) {
+                cw.querySelector(".nl-combo-lbl").textContent = opt.textContent;
+                cw.querySelectorAll(".nl-combo-opt").forEach(function (o) {
+                  o.classList.toggle("is-picked", o === opt);
+                });
+                var hs = cw.querySelector("select.nl-select");
+                if (hs) {
+                  var j = parseInt(opt.getAttribute("data-index"), 10);
+                  if (!isNaN(j)) hs.selectedIndex = j;
+                }
+                closeAllNlCombos();
+                return;
+              }
+            }
+            var cb = e.target.closest(".nl-combo-btn");
+            if (cb) {
+              var cx = cb.closest(".nl-combo");
+              if (cx && demo.contains(cx)) {
+                var wasOpen = cx.classList.contains("is-open");
+                closeAllNlCombos();
+                if (!wasOpen) {
+                  cx.classList.add("is-open");
+                  var menuEl = cx.querySelector(".nl-combo-menu");
+                  if (menuEl) menuEl.hidden = false;
+                  cb.setAttribute("aria-expanded", "true");
+                }
+                return;
+              }
+            }
+            if (!e.target.closest(".nl-combo")) closeAllNlCombos();
+          });
+          document.addEventListener("keydown", function (e) {
+            if (e.key === "Escape") closeAllNlCombos();
+          });
+        }
+
+        initNlCombos();
+
+        function formatRangeVal(range) {
+          var row = range.closest(".nl-slider-row");
+          var out = row && row.querySelector(".nl-range-val");
+          if (!out) return;
+          var fmt = range.getAttribute("data-nl-fmt");
+          var v = range.value;
+          if (fmt === "deg") out.textContent = v + "°";
+          else if (fmt === "pct") out.textContent = v + "%";
+          else if (fmt === "plus") out.textContent = "+" + v;
+          else if (fmt === "tenthdeg") out.textContent = (Number(v) / 10).toFixed(1) + "°";
+          else out.textContent = v;
+        }
+
+        function updateTopChrome(page) {
+          var isEss = page === "essentials";
+          var showFileBar = page === "scripts" || page === "cfg";
+          if (topGlobal) topGlobal.hidden = !showFileBar;
+          if (essWrap) {
+            var tabsOpen = isEss && essTabsVisible;
+            essWrap.classList.toggle("is-open", tabsOpen);
+            essWrap.setAttribute("aria-hidden", tabsOpen ? "false" : "true");
+          }
+          if (scriptRailToggle) {
+            scriptRailToggle.setAttribute("aria-expanded", isEss && essTabsVisible ? "true" : "false");
+          }
+          if (topSaveBtn) topSaveBtn.hidden = isEss;
+          if (playersSeg) playersSeg.hidden = page !== "players";
+        }
+
+        function updateRail(page) {
+          document.querySelectorAll(".nl-rail-nav").forEach(function (b) {
+            b.classList.toggle("is-active", b.getAttribute("data-nl-page") === page);
+          });
+          var railInner = document.querySelector(".nl-script-rail-inner");
+          if (railInner) railInner.classList.toggle("is-active", page === "essentials");
+          if (essentialsRailLine) {
+            essentialsRailLine.classList.toggle("is-page-active", page === "essentials");
+            essentialsRailLine.classList.toggle("has-tabs-open", page === "essentials" && essTabsVisible);
+          }
+        }
+
+        function showPage(page) {
+          currentPage = page;
+          router.querySelectorAll(".nl-page").forEach(function (p) {
+            var on = p.getAttribute("data-nl-page") === page;
+            p.classList.toggle("is-active", on);
+            p.hidden = !on;
+          });
+          updateTopChrome(page);
+          updateRail(page);
+          if (page === "essentials") nlSwitchTabInternal(topTabIdForEss(currentEssTab));
+        }
+
+        function topTabIdForEss(ess) {
+          if (ess === "antiaim") return "antiaim";
+          if (ess === "extra") return "extra";
+          return "home";
+        }
+
+        function nlSwitchTabInternal(id) {
+          var viewId = id === "script" ? "home" : id;
+          if (id === "home" || id === "antiaim" || id === "extra") currentEssTab = id;
+          if (id === "script") currentEssTab = "home";
+          tabBar.querySelectorAll(".nl-tab").forEach(function (t) {
+            var tid = t.getAttribute("data-nl-tab");
+            var on = tid === id;
+            t.classList.toggle("is-active", on);
+            t.setAttribute("aria-selected", on ? "true" : "false");
+          });
+          loadedBody.querySelectorAll(".nl-sheet").forEach(function (sh) {
+            var on = sh.getAttribute("data-nl-view") === viewId;
+            sh.classList.toggle("is-active", on);
+            sh.hidden = !on;
+          });
+          updateRail(currentPage);
+        }
+
+        function resetShowcasePanels() {
+          var homeSub = document.getElementById("nlHomeSub");
+          if (homeSub) {
+            homeSub.querySelectorAll(".nl-list-btn").forEach(function (b, i) {
+              b.classList.toggle("is-sel", i === 0);
+            });
+          }
+          document.querySelectorAll(".nl-home-panel[data-home-panel]").forEach(function (p) {
+            var isInfo = p.getAttribute("data-home-panel") === "info";
+            p.classList.toggle("nl-panel-hidden", !isInfo);
+          });
+          var aaSec = document.getElementById("nlAaSection");
+          if (aaSec) {
+            aaSec.querySelectorAll(".nl-list-btn").forEach(function (b, i) {
+              b.classList.toggle("is-sel", i === 0);
+            });
+          }
+          var bNest = document.getElementById("nlAaBuilderNest");
+          var aNest = document.getElementById("nlAaAddonsNest");
+          if (bNest) bNest.classList.remove("nl-panel-hidden");
+          if (aNest) aNest.classList.add("nl-panel-hidden");
+          document.querySelectorAll("[data-aa-team]").forEach(function (b, i) {
+            b.classList.toggle("is-sel", i === 0);
+          });
+          var st = document.getElementById("nlAaStates");
+          if (st) {
+            st.querySelectorAll(".nl-list-btn").forEach(function (b, i) {
+              b.classList.toggle("is-sel", i === 0);
+            });
+          }
+          var ex = document.getElementById("nlExtraSub");
+          if (ex) {
+            ex.querySelectorAll(".nl-list-btn").forEach(function (b, i) {
+              b.classList.toggle("is-sel", i === 0);
+            });
+          }
+          document.querySelectorAll(".nl-extra-panel[data-extra-panel]").forEach(function (p) {
+            var vis = p.getAttribute("data-extra-panel") === "visuals";
+            p.classList.toggle("nl-panel-hidden", !vis);
+          });
+          currentEssTab = "home";
+        }
+
+        function setEssentialsLoaded(on) {
+          essentialsLoaded = on;
+          var scriptsPage = document.getElementById("nlScriptsPage");
+          if (scriptsPage) scriptsPage.classList.toggle("nl-scripts-ess-loaded", on);
+          if (essentialsRailLine) essentialsRailLine.hidden = !on;
+          if (scriptName) scriptName.classList.toggle("is-loaded", on);
+          if (loadBtn) {
+            loadBtn.classList.toggle("stop", on);
+            loadBtn.classList.toggle("load", !on);
+            loadBtn.innerHTML = on
+              ? '<span class="nl-mkt-ico-stop" aria-hidden="true"></span> Stop'
+              : '<span class="nl-mkt-ico-play" aria-hidden="true"></span> Load';
+            loadBtn.setAttribute("aria-pressed", on ? "true" : "false");
+          }
+          if (!on) {
+            essTabsVisible = false;
+            resetShowcasePanels();
+            nlSwitchTabInternal("home");
+            if (currentPage === "essentials") showPage("scripts");
+            else {
+              updateTopChrome(currentPage);
+              updateRail(currentPage);
+            }
+          }
+        }
+
+        function toggleEssentialsLoad() {
+          if (!essentialsLoaded) {
+            essTabsVisible = false;
+            setEssentialsLoaded(true);
+            showPage("essentials");
+            nlSwitchTabInternal("home");
+          } else {
+            setEssentialsLoaded(false);
+          }
+        }
+
+        if (scriptRailToggle) {
+          scriptRailToggle.addEventListener("click", function (e) {
+            e.stopPropagation();
+            if (!essentialsLoaded) return;
+            if (currentPage !== "essentials") {
+              essTabsVisible = true;
+              showPage("essentials");
+              return;
+            }
+            essTabsVisible = !essTabsVisible;
+            updateTopChrome("essentials");
+            updateRail("essentials");
+          });
+        }
+
+        tabBar.addEventListener("click", function (e) {
+          var t = e.target.closest(".nl-tab");
+          if (!t || !tabBar.contains(t)) return;
+          nlSwitchTabInternal(t.getAttribute("data-nl-tab"));
+        });
+
+        loadBtn.addEventListener("click", toggleEssentialsLoad);
+
+        if (nav) {
+          nav.addEventListener("click", function (e) {
+            var rail = e.target.closest(".nl-rail-nav");
+            if (!rail) return;
+            var pg = rail.getAttribute("data-nl-page");
+            if (pg) showPage(pg);
+          });
+        }
+
+        router.addEventListener("input", function (e) {
+          if (e.target.classList.contains("nl-range")) formatRangeVal(e.target);
+        });
+
+        router.addEventListener("click", function (e) {
+          var sw = e.target.closest(".nl-switch");
+          if (sw && router.contains(sw)) sw.classList.toggle("on");
+        });
+
+        if (playersSeg) {
+          playersSeg.addEventListener("click", function (e) {
+            var b = e.target.closest(".nl-seg button");
+            if (!b) return;
+            playersSeg.querySelectorAll(".nl-seg button").forEach(function (x) {
+              x.classList.toggle("is-active", x === b);
+            });
+          });
+        }
+
+        router.querySelectorAll(".nl-range").forEach(formatRangeVal);
+
+        var homeSub = document.getElementById("nlHomeSub");
+        if (homeSub) {
+          homeSub.addEventListener("click", function (e) {
+            if (!essentialsLoaded) return;
+            var b = e.target.closest("[data-home-sub]");
+            if (!b) return;
+            var sub = b.getAttribute("data-home-sub");
+            homeSub.querySelectorAll(".nl-list-btn").forEach(function (x) {
+              x.classList.toggle("is-sel", x === b);
+            });
+            document.querySelectorAll(".nl-home-panel[data-home-panel]").forEach(function (p) {
+              p.classList.toggle("nl-panel-hidden", p.getAttribute("data-home-panel") !== sub);
+            });
+          });
+        }
+
+        var cfgPanel = document.querySelector(".nl-home-panel[data-home-panel=\"configs\"]");
+        if (cfgPanel) {
+          cfgPanel.addEventListener("click", function (e) {
+            if (!essentialsLoaded) return;
+            var b = e.target.closest(".nl-list .nl-list-btn");
+            if (!b || !cfgPanel.querySelector(".nl-list").contains(b)) return;
+            cfgPanel.querySelectorAll(".nl-list .nl-list-btn").forEach(function (x) {
+              x.classList.toggle("is-sel", x === b);
+            });
+          });
+        }
+
+        var aaSec = document.getElementById("nlAaSection");
+        if (aaSec) {
+          aaSec.addEventListener("click", function (e) {
+            if (!essentialsLoaded) return;
+            var b = e.target.closest("[data-aa-sec]");
+            if (!b) return;
+            var sec = b.getAttribute("data-aa-sec");
+            aaSec.querySelectorAll(".nl-list-btn").forEach(function (x) {
+              x.classList.toggle("is-sel", x === b);
+            });
+            var bNest = document.getElementById("nlAaBuilderNest");
+            var aNest = document.getElementById("nlAaAddonsNest");
+            if (bNest) bNest.classList.toggle("nl-panel-hidden", sec !== "builder");
+            if (aNest) aNest.classList.toggle("nl-panel-hidden", sec !== "addons");
+          });
+        }
+
+        var nlAaStates = document.getElementById("nlAaStates");
+        if (nlAaStates) {
+          nlAaStates.addEventListener("click", function (e) {
+            if (!essentialsLoaded) return;
+            var b = e.target.closest("[data-aa-state]");
+            if (!b) return;
+            nlAaStates.querySelectorAll(".nl-list-btn").forEach(function (x) {
+              x.classList.toggle("is-sel", x === b);
+            });
+          });
+        }
+
+        document.querySelectorAll("[data-aa-team]").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            if (!essentialsLoaded) return;
+            document.querySelectorAll("[data-aa-team]").forEach(function (b) {
+              b.classList.toggle("is-sel", b === btn);
+            });
+          });
+        });
+
+        var nlExtraSub = document.getElementById("nlExtraSub");
+        if (nlExtraSub) {
+          nlExtraSub.addEventListener("click", function (e) {
+            if (!essentialsLoaded) return;
+            var b = e.target.closest("[data-extra-sub]");
+            if (!b) return;
+            var sub = b.getAttribute("data-extra-sub");
+            nlExtraSub.querySelectorAll(".nl-list-btn").forEach(function (x) {
+              x.classList.toggle("is-sel", x === b);
+            });
+            document.querySelectorAll(".nl-extra-panel[data-extra-panel]").forEach(function (p) {
+              p.classList.toggle("nl-panel-hidden", p.getAttribute("data-extra-panel") !== sub);
+            });
+          });
+        }
+
+        showPage("scripts");
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", function () {
+          boot();
+          initShowcaseMock();
+        });
+      } else {
+        boot();
+        initShowcaseMock();
+      }
+    })();
+  </script>
   <script>
     (function () {
       var c = document.getElementById("bg");
